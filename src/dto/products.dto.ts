@@ -4,4 +4,5 @@ export class CreateProductDTO {
   readonly imageURL: string;
   readonly price: number;
   readonly stock: number;
+  readonly category: string;
 }
