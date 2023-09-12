@@ -16,12 +16,18 @@ import {
 } from '@nestjs/common';
 import { CreateProductDTO } from '../dto/products.dto';
 import { ProductsService } from './products.service';
+// import { CartService } from 'src/cart/cart.service';
+// import { Auth } from 'src/decorators/auth.decorator';
+// import { Role } from 'src/commons/enums/rol.enums';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private productService: ProductsService) {}
+  constructor(
+    private productService: ProductsService, // private cartService: CartService,
+  ) {}
 
   @Post('/create')
+  // @Auth(Role.ADMIN)
   async createPost(
     @Res() res: any,
     @Body() createProductDTO: CreateProductDTO,
@@ -61,6 +67,7 @@ export class ProductsController {
   }
 
   @Put('/update')
+  // @Auth(Role.ADMIN)
   async updateProduct(
     @Res() res: any,
     @Body() createProductDTO: CreateProductDTO,
@@ -76,4 +83,18 @@ export class ProductsController {
       updatedProduct,
     });
   }
+
+  // @Post('addToCart')
+  // async add(@Body() productId: string) {
+  //   try {
+  //     // Llama al método addToCart del servicio de productos
+  //     const cartItem = this.cartService.addToCart(productId);
+
+  //     // Si todo va bien, puedes devolver el elemento del carrito agregado como respuesta
+  //     return cartItem;
+  //   } catch (error) {
+  //     // Maneja errores como el producto no encontrado o cualquier otro error de negocio aquí
+  //     throw new NotFoundException(error.message);
+  //   }
+  // }
 }

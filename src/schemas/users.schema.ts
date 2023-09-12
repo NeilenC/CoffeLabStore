@@ -1,4 +1,5 @@
 import { Schema } from 'mongoose';
+import { Role } from 'src/commons/enums/rol.enums';
 
 export const UserSchema = new Schema({
   name: String,
@@ -10,4 +11,9 @@ export const UserSchema = new Schema({
     unique: true,
   },
   password: String,
+  role: {
+    type: String,
+    default: Role.USER,
+    enum: Role,
+  },
 });

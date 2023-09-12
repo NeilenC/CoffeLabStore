@@ -17,7 +17,7 @@ export class UsersService {
     return await this.usersModel.findOne({ email });
   }
 
-  findAll() {
-    return 'Todo';
+  async findAll() {
+    return await this.usersModel.find();
   }
 }

@@ -10,5 +10,8 @@ export const ProductSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  category: String,
+  category: {
+    type: String,
+    allowNull: true,
+  },
 });
