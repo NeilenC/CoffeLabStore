@@ -18,18 +18,18 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     ProductsModule,
     CategoriesModule,
     CartModule,
     UsersModule,
     AuthModule,
     OrderModule,
-    MongooseModule.forRoot(
-      'mongodb+srv://neilenmonlezun:contraseña123@coffeelab.h0piq4m.mongodb.net/?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
     // AuthModule,
   ],
   controllers: [

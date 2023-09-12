@@ -21,24 +21,20 @@ export class CartService {
     productId: string,
     quantity: number,
   ): Promise<Cart> {
-    // 1. Obtener el producto desde la base de datos para verificar el stock.
     const product = await this.productModel.findOne({ _id: productId }).exec();
 
     if (!product) {
       throw new Error('Producto no encontrado');
     }
 
-    // 2. Comprobar si hay suficiente stock disponible.
     if (product.stock < quantity) {
       throw new NotFoundException(
         `No hay suficiente stock para ${product.name}`,
       );
     }
 
-    // 3. Obtener el carrito actual del usuario desde la base de datos.
     const cart = await this.cartModel.findOne({ userId }).exec();
 
-    // 4. Si el usuario no tiene un carrito, crear uno nuevo.
     if (!cart) {
       const newCart = new this.cartModel({
         userId,
