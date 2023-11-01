@@ -17,6 +17,10 @@ export class UsersService {
     return await this.usersModel.findOne({ email });
   }
 
+  async findOneById(id: string) {
+    return await this.usersModel.findOne({ _id: id });
+  }
+
   async findAll() {
     return await this.usersModel.find();
   }

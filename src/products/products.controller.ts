@@ -66,12 +66,12 @@ export class ProductsController {
     });
   }
 
-  @Put('/update')
+  @Put('/update/:productID')
   // @Auth(Role.ADMIN)
   async updateProduct(
     @Res() res: any,
     @Body() createProductDTO: CreateProductDTO,
-    @Query('productID') productID: string,
+    @Param('productID') productID: string,
   ) {
     const updatedProduct = await this.productService.updateProduct(
       productID,
@@ -82,6 +82,28 @@ export class ProductsController {
       message: 'Modificado con exito',
       updatedProduct,
     });
+  }
+
+  @Get('byCategory/:category')
+  findByCategory(@Param('category') category: string) {
+    return this.productService.findByCategory(category);
+  }
+  
+
+  @Get('list')
+  async filterProducts(
+    @Query() query: string,
+    @Res() res: any
+  ) {
+    try {
+      const products = await this.productService.getFilteredProducts(query);
+      res.status(200).json(products);
+    } catch (error) {
+      console.log('error', error);
+      res.status(400).json({
+        error: 'No se pudoooo'
+      });
+    }
   }
 
   // @Post('addToCart')

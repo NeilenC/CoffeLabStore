@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res, HttpStatus, Get } from '@nestjs/common';
+import { Body, Controller, Post, Res, HttpStatus, Get, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDTO } from 'src/dto/users.dto';
 
@@ -16,5 +16,14 @@ export class UsersController {
   async findAll() {
     const users = await this.userService.findAll();
     return users;
+  }
+
+  @Get('/:id')
+  async findOne(
+    @Param('id') id: string,
+    @Res() res: any
+  ) {
+    const user = await this.userService.findOneById(id);
+    return res.send(user);
   }
 }

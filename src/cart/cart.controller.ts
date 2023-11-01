@@ -1,16 +1,11 @@
-// cart.controller.ts
 import {
   Body,
   Controller,
   Delete,
   Get,
-  // Post,
-  // Body,
   Param,
   Patch,
   Post,
-  // Patch,
-  // Delete,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CartDTO } from 'src/dto/cart.dto';
@@ -19,33 +14,37 @@ import { CartDTO } from 'src/dto/cart.dto';
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
-  @Get(':userId')
+  @Get('/:userId')
   async getCart(@Param('userId') userId: string) {
     return this.cartService.getCart(userId);
   }
 
-  @Post(':userId')
+  @Post('/:userId')
   async addToCart(
-    @Param('userId') userId: string,
-    @Body() addToCartDto: CartDTO,
+    @Body('userId') userId: string,
+    @Body() addToCartDto: CartDTO, 
   ) {
-    // if (
-    //   !addToCartDto ||
-    //   !addToCartDto.items ||
-    //   addToCartDto.items.length === 0
-    // ) {
-    //   return {
-    //     message: 'No se proporcionaron elementos para agregar al carrito',
-    //   };
-    // }
+    try{
+    if (
+      !addToCartDto ||
+      !addToCartDto.items ||
+      addToCartDto.items.length === 0
+    ) {
+      return {
+        message: 'No se proporcionaron elementos para agregar al carrito',
+      };
+    }
 
-    const cart = await this.cartService.addToCart(
-      userId,
-      addToCartDto.items[0].productId,
-      addToCartDto.items[0].quantity,
+  const cart = await this.cartService.addToCart(
+    userId,
+    addToCartDto.items[0].productId,
+    addToCartDto.items[0].quantity,
     );
-
-    return { message: 'Productos agregados exitosamente', cart };
+    
+    return { cart };
+  }catch(e){
+    console.log("EERPR CATCH", e)
+   }
   }
 
   @Patch(':userId')

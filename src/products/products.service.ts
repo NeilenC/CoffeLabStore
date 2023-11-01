@@ -44,6 +44,51 @@ export class ProductsService {
     return updatedProduct;
   }
 
+  async findByCategory(category: string): Promise<Product[]> {
+    const products = await this.productModel.find({ category: category }).exec();
+    return products;
+  }
+
+  async getFilteredProducts(query: any) {
+    try {
+      const {
+        sortOrder,
+        rating,
+        max,
+        min,
+        category,
+        page = 1,
+        limit = 10
+      } = query;
+      
+      // Consulta para filtrar productos segun los parámetros de la solicitud.
+      const filter: any = {};
+      if (min) filter.price = { $gte: min };
+      if (max) filter.price = { ...filter.price, $lte: max };
+      if (rating) filter.rating = rating;
+      if (category) filter.category = category;
+
+      // Consulta a la base de datos utilizando el modelo de productos.
+      const products = await this.productModel
+        .find(filter)
+        .sort(sortOrder)
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .exec();
+
+      const totalProducts = await this.productModel.countDocuments(filter);
+
+      return {
+        products,
+        totalPages: Math.ceil(totalProducts / limit),
+        currentPage: page,
+        count: products.length,
+      };
+    } catch (error) {
+      throw new Error('Error al obtener los productos filtrados');
+    }
+  }
+
   //Disminuir el stock cuando se realice la compra del producto
   // async decreaseStock(productId: string, quantity: number): Promise<Product> {
   //   const product = await this.getProductById(productId);

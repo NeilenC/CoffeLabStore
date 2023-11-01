@@ -23,9 +23,34 @@ export class CategoriesService {
   async createCategory(
     createCategoriesDTO: CreateCategoriesDTO,
   ): Promise<Categories> {
-    const category = new this.categoriesModel(createCategoriesDTO); // Creamos el objeto que vamos a guardar.
+    const category = new this.categoriesModel(createCategoriesDTO);
     return await category.save();
   }
+
+  async addSubcategories(categoryId: string, subcategories: { name: string }[]): Promise<Categories | null> {
+    try {
+      const category = await this.categoriesModel.findById(categoryId);
+  
+      if (!category) {
+        return null; // La categoría no existe
+      }
+  
+      // Verificar que las subcategorías no se repitan y agregar las nuevas subcategorías
+      // subcategories.forEach((subcategory) => {
+      //   const subcategoryName = subcategory.name;
+      //   const subcategoryExists = category.subcategories.find((s) => s.name === subcategoryName);
+      //   if (!subcategoryExists) {
+      //     category.subcategories.push({ name: subcategoryName });
+      //   }
+      // });
+  
+      const updatedCategory = await category.save();
+      return updatedCategory;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
 
   async deleteCategory(categoryID: string): Promise<Categories> {
     const deletedCategory =
