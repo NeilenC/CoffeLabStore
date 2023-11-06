@@ -14,6 +14,10 @@ export const ProductSchema = new Schema({
     id: String,
     name: String,
     description: String,
-    subcategories:Array,
   },
+  subcategory: {
+    id: String,
+    name: String,
+    category: String
+  }
 });

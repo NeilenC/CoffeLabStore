@@ -14,7 +14,7 @@ export class Category  {
 }
 
 export class SubCategory  {
-  category: any;
-  name:any;
   id:any
+  name:any;
+  category: any;
 }

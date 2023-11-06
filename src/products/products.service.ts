@@ -51,6 +51,15 @@ export class ProductsService {
     return products;
   }
 
+  async findBySubCategory(subcategory: string): Promise<Product[]> {
+    console.log("SUB CATEGORY", subcategory)
+
+    const products = await this.productModel.find({ 'subcategory.id': subcategory }).exec();
+
+    console.log("PRODUCTO SUB CATEGORY", products)
+    return products;
+  }
+
   async getFilteredProducts(query: any) {
     try {
       const {

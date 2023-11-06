@@ -8,5 +8,5 @@ export interface Product extends Document {
   stock: number;
   readonly createdAt: Date;
   category: string;
-  subcategory: any;
+  subcategory: string;
 }

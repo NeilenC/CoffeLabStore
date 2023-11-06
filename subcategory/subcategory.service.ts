@@ -36,9 +36,15 @@ export class SubCategoryService {
   async getByCategory(categoryId: SubCategory){
     try{
 
+      console.log("CATEGORY ID SERVICE", categoryId)
 
       const getSubCategory = await this.subCategoryModel.find({ category: categoryId })
-      console.log("GET SUBCATEGORY BY CATEGORY", getSubCategory)
+
+      if (getSubCategory.length === 0) {
+      console.log("No se encontraron subcategorías para el categoryId:", categoryId);
+    } else {
+      console.log("GET SUBCATEGORY BY CATEGORY", getSubCategory);
+    }
       return getSubCategory;
     } catch (e) {
 

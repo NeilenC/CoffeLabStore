@@ -28,7 +28,7 @@ export class ProductsController {
   constructor(
     private productService: ProductsService, // private cartService: CartService,
     private categoryService: CategoriesService,
-    // private subCategoryService: SubCategoryService,
+    private subCategoryService: SubCategoryService,
   ) {}
 
   @Post('/create')
@@ -40,27 +40,34 @@ export class ProductsController {
   ) {
     
     const id = body.category
+    // const categoryId = body.category
 
-    console.log("id CATEGORY", id)
+    // console.log("id CATEGORY", subCategoryId)
     
     const getCategory = await this.categoryService.getCategory(id)
-    // const getSubCategory = await this.subCategoryService.getByCategory(id)
-    
-    // console.log("GET SUBCATEGORY", getSubCategory)
+    const getSubCategory = await this.subCategoryService.getByCategory(id)
+    const subcategoryId = body.subcategory;
+
+    // Verificar que el ID de la subcategoría en la solicitud coincida con uno de los IDs de subcategorías encontrados
+    const matchedSubcategory = getSubCategory.find((subcategory) => subcategory._id.toString() === subcategoryId);
+  
     // const subcategoryId = createProductDTO.subcategory.id
     const category: Category = { 
       id: getCategory._id.toString(),
       name: getCategory.name,
     };
 
-    // const subCategories: SubCategory = {
-    //   category: category.id,
-    //   name: getSubCategory.name,
-    //   id: getSubCategory.subcategories
-    // }
+    if (matchedSubcategory) {
+       const subCategories: SubCategory = {
+          category: category.id,
+          name: matchedSubcategory.name,
+          id: matchedSubcategory._id.toString()
+        }
+     createProductDTO.subcategory = subCategories;
+
+      };
 
     createProductDTO.category = category;
-    // createProductDTO.subcategory = subCategories;
 
 
     const newProduct =
@@ -97,42 +104,59 @@ export class ProductsController {
   }
 
   @Put('/update/:productID')
-  // @Auth(Role.ADMIN)
   async updateProduct(
     @Res() res: any,
-    @Body() body:any,
+    @Body() body: any,
     @Body() createProductDTO: CreateProductDTO,
     @Param('productID') productID: string,
   ) {
+    const categoryId = body.category;
+  
+    const getCategory = await this.categoryService.getCategory(categoryId);
+  
+    const subCategories = await this.subCategoryService.getByCategory(categoryId);
+  
+    const subcategoryId = body.subcategory;
+  
+    const matchedSubcategory = subCategories.find((subcategory) => subcategory._id.toString() === subcategoryId);
+  
+    if (matchedSubcategory) {
+      const category: Category = {
+        id: getCategory._id.toString(),
+        name: getCategory.name,
+      };
+  
+      const subcategory: SubCategory = {
+        id: matchedSubcategory._id.toString(),
+        name: matchedSubcategory.name,
+        category: category.id
+      };
 
-    const id = body.category
-    
-//Buscar la categoría por ID 
-    // const getCategory = await this.categoryService.getCategory(id)
-    // const subcategory = await this.subCategoryService.getCategory(id)
-    
-    // console.log("getCATEGORy", getCategory)
-    // const category: Category = {name: getCategory.name, id: getCategory._id}
-    // console.log("category", category)
-
-    // const subCategory: SubCategory = {name: SubCategory.name, id: SubCategory._id, category: SubCategory.category}
-
-    const updatedProduct = await this.productService.updateProduct(
-      productID,
-      createProductDTO,
-    );
-    if (!updatedProduct) throw new NotFoundException('Producto no existe');
-    return res.status(HttpStatus.OK).json({
-      message: 'Modificado con exito',
-      updatedProduct,
-    });
+      createProductDTO.subcategory = subcategory
+  
+      const updatedProduct = await this.productService.updateProduct(
+        productID,
+        createProductDTO,
+      );
+      if (!updatedProduct) throw new NotFoundException('Producto no existe');
+      return res.status(HttpStatus.OK).json({
+        message: 'Modificado con éxito',
+        updatedProduct,
+      });
+    } else {
+     throw new Error
+    }
   }
-
+  
   @Get('byCategory/:category')
   findByCategory(@Param('category') category: string) {
     return this.productService.findByCategory(category);
   }
-  
+
+  @Get('bySubCategory/:subcategory')
+  findBySubCategory(@Param('subcategory') subcategory: string) {
+    return this.productService.findBySubCategory(subcategory);
+  }
 
   @Get('list')
   async filterProducts(
