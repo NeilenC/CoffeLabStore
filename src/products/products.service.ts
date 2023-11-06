@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product } from 'src/interfaces/product.interface';
-import { CreateProductDTO } from 'src/dto/products.dto';
+import { CreateProductDTO, SubCategory } from 'src/dto/products.dto';
+import { Categories } from 'src/interfaces/categories.interfaces';
 // import { Cart } from 'src/interfaces/cart.interface';
 // import { CartDTO } from 'src/dto/cart.dto';
 
@@ -10,6 +11,7 @@ import { CreateProductDTO } from 'src/dto/products.dto';
 export class ProductsService {
   constructor(
     @InjectModel('Product') readonly productModel: Model<Product>, // @InjectModel('Cart') readonly cartModel: Model<Cart>,
+    // @InjectModel('SubCategory') readonly subCategoryModel: Model<SubCategory>, 
   ) {}
 
   async getProducts(): Promise<Product[]> {
@@ -23,8 +25,8 @@ export class ProductsService {
   }
 
   async createProduct(createProductDTO: CreateProductDTO): Promise<Product> {
-    const product = new this.productModel(createProductDTO); // Creamos el objeto que vamos a guardar.
-    return await product.save(); // Aca retornamos el producto guardado con el .save()
+    const product = new this.productModel(createProductDTO); 
+    return await product.save(); 
   }
 
   async deleteProduct(productID: string): Promise<Product> {

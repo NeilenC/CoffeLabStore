@@ -8,10 +8,12 @@ import { SubCategorySchema } from 'src/schemas/subcategory.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: 'Categories', schema: CategoriesSchema },
+      { name: 'Subcategory', schema: SubCategorySchema },
     ]),
   ],
   controllers: [CategoriesController],
   providers: [CategoriesService],
 })
 export class CategoriesModule {}
+
+

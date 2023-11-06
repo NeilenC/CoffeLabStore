@@ -11,7 +11,9 @@ export const ProductSchema = new Schema({
     default: Date.now,
   },
   category: {
-    type: String,
-    allowNull: true,
+    id: String,
+    name: String,
+    description: String,
+    subcategories:Array,
   },
 });

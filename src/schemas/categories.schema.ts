@@ -5,3 +5,5 @@ export const CategoriesSchema = new Schema({
   description: String,
   subcategories: Array<string>,
 });
+
+

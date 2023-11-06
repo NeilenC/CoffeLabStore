@@ -33,9 +33,9 @@ export class CategoriesController {
     return res.status(HttpStatus.OK).send(category);
   }
 
-  @Get('/:categoryID')
-  async getCategory(@Res() res: any, @Param('categoryID') categoryID: string) {
-    const category = await this.categoriesService.getCategory(categoryID);
+  @Get('/:categoryId')
+  async getCategory(@Res() res: any, @Param('categoryId') categoryId: any) {
+    const category = await this.categoriesService.getCategory(categoryId);
     if (!category) {
       return NotFoundException;
     }

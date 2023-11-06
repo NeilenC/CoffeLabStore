@@ -24,6 +24,9 @@ import { UserSchema } from './schemas/users.schema';
 import { CategoriesSchema } from './schemas/categories.schema';
 import { OrderSchema } from './schemas/order.schema';
 import { CartSchema } from './schemas/cart.schema';
+import { SubCategorySchema } from './schemas/subcategory.schema';
+import { SubCategoryController } from 'subcategory/subcategory.controller';
+import { SubCategoryService } from 'subcategory/subcategory.service';
 
 @Module({
   imports: [
@@ -41,6 +44,8 @@ import { CartSchema } from './schemas/cart.schema';
     MongooseModule.forFeature([{ name: 'Categories', schema: CategoriesSchema }]),
     MongooseModule.forFeature([{ name: 'Order', schema: OrderSchema }]),
     MongooseModule.forFeature([{ name: 'Cart', schema: CartSchema }]),
+    MongooseModule.forFeature([{ name: 'SubCategory', schema: SubCategorySchema }]),
+
     // AuthModule,
   ],
   controllers: [
@@ -50,6 +55,7 @@ import { CartSchema } from './schemas/cart.schema';
     UsersController,
     OrderController,
     CartController,
+    SubCategoryController
   ],
   providers: [
     AppService,
@@ -58,6 +64,7 @@ import { CartSchema } from './schemas/cart.schema';
     UsersService,
     OrderService,
     CartService,
+    SubCategoryService
   ],
 })
 export class AppModule {}

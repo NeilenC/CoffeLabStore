@@ -14,8 +14,11 @@ import {
   Put,
   //   Body,
 } from '@nestjs/common';
-import { CreateProductDTO } from '../dto/products.dto';
+import { Category, CreateProductDTO, SubCategory } from '../dto/products.dto';
 import { ProductsService } from './products.service';
+import { CategoriesService } from 'src/categories/categories.service';
+import { CreateCategoriesDTO } from 'src/dto/categories.dto';
+import { SubCategoryService } from 'subcategory/subcategory.service';
 // import { CartService } from 'src/cart/cart.service';
 // import { Auth } from 'src/decorators/auth.decorator';
 // import { Role } from 'src/commons/enums/rol.enums';
@@ -24,18 +27,45 @@ import { ProductsService } from './products.service';
 export class ProductsController {
   constructor(
     private productService: ProductsService, // private cartService: CartService,
+    private categoryService: CategoriesService,
+    // private subCategoryService: SubCategoryService,
   ) {}
 
   @Post('/create')
   // @Auth(Role.ADMIN)
   async createPost(
     @Res() res: any,
+    @Body() body:any,
     @Body() createProductDTO: CreateProductDTO,
   ) {
-    //instancia: Clase
-    console.log(createProductDTO);
+    
+    const id = body.category
+
+    console.log("id CATEGORY", id)
+    
+    const getCategory = await this.categoryService.getCategory(id)
+    // const getSubCategory = await this.subCategoryService.getByCategory(id)
+    
+    // console.log("GET SUBCATEGORY", getSubCategory)
+    // const subcategoryId = createProductDTO.subcategory.id
+    const category: Category = { 
+      id: getCategory._id.toString(),
+      name: getCategory.name,
+    };
+
+    // const subCategories: SubCategory = {
+    //   category: category.id,
+    //   name: getSubCategory.name,
+    //   id: getSubCategory.subcategories
+    // }
+
+    createProductDTO.category = category;
+    // createProductDTO.subcategory = subCategories;
+
+
     const newProduct =
       await this.productService.createProduct(createProductDTO);
+      console.log("NEW", newProduct)
     return res.status(HttpStatus.OK).send(newProduct);
   }
 
@@ -70,9 +100,23 @@ export class ProductsController {
   // @Auth(Role.ADMIN)
   async updateProduct(
     @Res() res: any,
+    @Body() body:any,
     @Body() createProductDTO: CreateProductDTO,
     @Param('productID') productID: string,
   ) {
+
+    const id = body.category
+    
+//Buscar la categoría por ID 
+    // const getCategory = await this.categoryService.getCategory(id)
+    // const subcategory = await this.subCategoryService.getCategory(id)
+    
+    // console.log("getCATEGORy", getCategory)
+    // const category: Category = {name: getCategory.name, id: getCategory._id}
+    // console.log("category", category)
+
+    // const subCategory: SubCategory = {name: SubCategory.name, id: SubCategory._id, category: SubCategory.category}
+
     const updatedProduct = await this.productService.updateProduct(
       productID,
       createProductDTO,
