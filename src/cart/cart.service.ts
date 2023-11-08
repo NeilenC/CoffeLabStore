@@ -45,27 +45,27 @@ export class CartService {
       return newCart;
     }
 
-    // 5. Comprobar si el producto ya está en el carrito.
+    // Comprobar si el producto ya está en el carrito.
     const existingItem = cart.items.find(
       (item) => item.productId.toString() === productId.toString(),
     );
 
     if (existingItem) {
-      // 6. Si el producto ya está en el carrito, actualizar la cantidad.
+      // Si el producto ya está en el carrito, actualizar la cantidad.
       existingItem.quantity += quantity;
     } else {
-      // 7. Si el producto no está en el carrito, agrégalo como un nuevo elemento.
+      // Si el producto no está en el carrito, agrégalo como un nuevo elemento.
       cart.items.push({ productId, quantity });
     }
 
-    // 8. Guardar los cambios en el carrito.
+    // Guardar los cambios en el carrito.
     await cart.save();
 
-    // 9. Devolver el carrito actualizado.
+    // Devolver el carrito actualizado.
     return cart;
   }
 
-  //Modificar la cantidad de un producto desde el carrito
+  // Modificar la cantidad de un producto desde el carrito
   async updateCart(
     userId: string,
     productId: string,
@@ -75,7 +75,7 @@ export class CartService {
     const cart = await this.cartModel.findOne({ userId }).exec();
 
     if (!cart) {
-      // Si el carrito no existe, puedes manejarlo de acuerdo a tu aplicación (lanzar un error, por ejemplo)
+  
       throw new Error('Carrito no encontrado');
     }
 

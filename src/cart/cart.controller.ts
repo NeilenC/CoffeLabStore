@@ -57,7 +57,6 @@ export class CartController {
       !updateCartItemDto.items ||
       updateCartItemDto.items.length === 0
     ) {
-      // Manejar el caso en el que updateCartItemDto no esté definido o no tenga elementos en items
       throw new Error('Solicitud de actualización no válida');
     }
     const productId = updateCartItemDto.items[0].productId;

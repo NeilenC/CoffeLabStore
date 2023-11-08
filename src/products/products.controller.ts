@@ -40,18 +40,14 @@ export class ProductsController {
   ) {
     
     const id = body.category
-    // const categoryId = body.category
 
-    // console.log("id CATEGORY", subCategoryId)
     
     const getCategory = await this.categoryService.getCategory(id)
     const getSubCategory = await this.subCategoryService.getByCategory(id)
     const subcategoryId = body.subcategory;
 
-    // Verificar que el ID de la subcategoría en la solicitud coincida con uno de los IDs de subcategorías encontrados
     const matchedSubcategory = getSubCategory.find((subcategory) => subcategory._id.toString() === subcategoryId);
   
-    // const subcategoryId = createProductDTO.subcategory.id
     const category: Category = { 
       id: getCategory._id.toString(),
       name: getCategory.name,

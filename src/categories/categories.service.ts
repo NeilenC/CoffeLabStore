@@ -32,10 +32,9 @@ export class CategoriesService {
       const category = await this.categoriesModel.findById(categoryId);
   
       if (!category) {
-        return null; // La categoría no existe
+        return null; 
       }
   
-      // Verificar que las subcategorías no se repitan y agregar las nuevas subcategorías
       // subcategories.forEach((subcategory) => {
       //   const subcategoryName = subcategory.name;
       //   const subcategoryExists = category.subcategories.find((s) => s.name === subcategoryName);
