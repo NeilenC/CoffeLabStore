@@ -154,21 +154,21 @@ export class ProductsController {
     return this.productService.findBySubCategory(subcategory);
   }
 
-  @Get('list')
-  async filterProducts(
-    @Query() query: string,
-    @Res() res: any
-  ) {
-    try {
-      const products = await this.productService.getFilteredProducts(query);
-      res.status(200).json(products);
-    } catch (error) {
-      console.log('error', error);
-      res.status(400).json({
-        error: 'No se pudoooo'
-      });
-    }
-  }
+  // @Get('list')
+  // async filterProducts(
+  //   @Query() query: string,
+  //   @Res() res: any
+  // ) {
+  //   try {
+  //     const products = await this.productService.getFilteredProducts(query);
+  //     res.status(200).json(products);
+  //   } catch (error) {
+  //     console.log('error', error);
+  //     res.status(400).json({
+  //       error: 'No se pudoooo'
+  //     });
+  //   }
+  // }
 
   // @Post('addToCart')
   // async add(@Body() productId: string) {

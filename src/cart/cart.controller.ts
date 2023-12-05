@@ -14,76 +14,90 @@ import { CartDTO } from 'src/dto/cart.dto';
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
-  @Get('/:userId')
-  async getCart(@Param('userId') userId: string) {
-    return this.cartService.getCart(userId);
+
+  @Post(':userId')
+  addToCart(@Param('userId') userId: string, @Body() cartItems: any): void {
+    this.cartService.addToCart(userId, cartItems);
   }
 
-  @Post('/:userId')
-  async addToCart(
-    @Body('userId') userId: string,
-    @Body() addToCartDto: CartDTO, 
-  ) {
-    try{
-    if (
-      !addToCartDto ||
-      !addToCartDto.items ||
-      addToCartDto.items.length === 0
-    ) {
-      return {
-        message: 'No se proporcionaron elementos para agregar al carrito',
-      };
-    }
+  @Get(':cartId')
+  getCart(@Param('cartId') cartId: string): any {
+    return this.cartService.getCart(cartId);
+  }
 
-  const cart = await this.cartService.addToCart(
-    userId,
-    addToCartDto.items[0].productId,
-    addToCartDto.items[0].quantity,
-    );
+
+
+
+  // @Get('/:userId')
+  // async getCart(@Param('userId') userId: string) {
+  //   return this.cartService.getCart(userId);
+  // }
+
+  // @Post('/:userId')
+  // async addToCart(
+  //   @Body('userId') userId: string,
+  //   @Body() addToCartDto: CartDTO, 
+  // ) {
+  //   try{
+  //   if (
+  //     !addToCartDto ||
+  //     !addToCartDto.items ||
+  //     addToCartDto.items.length === 0
+  //   ) {
+  //     return {
+  //       message: 'No se proporcionaron elementos para agregar al carrito',
+  //     };
+  //   }
+
+  // const cart = await this.cartService.addToCart(
+  //   userId,
+  //   addToCartDto.items[0].productId,
+  //   addToCartDto.items[0].quantity,
+  //   );
     
-    return { cart };
-  }catch(e){
-    console.log("EERPR CATCH", e)
-   }
-  }
+  //   return { cart };
+  // }catch(e){
+  //   console.log("EERPR CATCH", e)
+  //  }
+  // }
 
-  @Patch(':userId')
-  async updateCartItem(
-    @Param('userId') userId: string,
-    @Body() updateCartItemDto: CartDTO,
-  ) {
-    if (
-      !updateCartItemDto ||
-      !updateCartItemDto.items ||
-      updateCartItemDto.items.length === 0
-    ) {
-      throw new Error('Solicitud de actualización no válida');
-    }
-    const productId = updateCartItemDto.items[0].productId;
+  // @Patch(':userId')
+  // async updateCartItem(
+  //   @Param('userId') userId: string,
+  //   @Body() updateCartItemDto: CartDTO,
+  // ) {
+  //   if (
+  //     !updateCartItemDto ||
+  //     !updateCartItemDto.items ||
+  //     updateCartItemDto.items.length === 0
+  //   ) {
+  //     throw new Error('Solicitud de actualización no válida');
+  //   }
+  //   const productId = updateCartItemDto.items[0].productId;
 
-    if (!productId) {
-      throw new Error('ID de producto no proporcionado en la solicitud');
-    }
+  //   if (!productId) {
+  //     throw new Error('ID de producto no proporcionado en la solicitud');
+  //   }
 
-    return this.cartService.updateCart(
-      userId,
-      productId,
-      updateCartItemDto.items[0].quantity,
-    );
-  }
+  //   return this.cartService.updateCart(
+  //     userId,
+  //     productId,
+  //     updateCartItemDto.items[0].quantity,
+  //   );
+  // }
 
-  @Delete(':userId')
-  async removeFromCart(
-    @Param('userId') userId: string,
-    @Body() deleteCartItemDto: CartDTO,
-  ) {
-    const productId = deleteCartItemDto.items[0].productId;
+  // @Delete(':userId')
+  // async removeFromCart(
+  //   @Param('userId') userId: string,
+  //   @Body() deleteCartItemDto: CartDTO,
+  // ) {
+  //   const productId = deleteCartItemDto.items[0].productId;
 
-    return this.cartService.removeFromCart(userId, productId);
-  }
+  //   return this.cartService.removeFromCart(userId, productId);
+  // }
 
-  @Delete(':userId/deleteCart')
-  async deleteCart(@Param('userId') userId: string) {
-    return this.cartService.deleteCart(userId);
-  }
+  // @Delete(':userId/deleteCart')
+  // async deleteCart(@Param('userId') userId: string) {
+  //   return this.cartService.deleteCart(userId);
+  // }
 }

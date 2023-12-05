@@ -5,6 +5,8 @@ import { OrderSchema } from 'src/schemas/order.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CartSchema } from 'src/schemas/cart.schema';
 import { ProductSchema } from 'src/schemas/products.schema';
+import { CartController } from 'src/cart/cart.controller';
+import { CartService } from 'src/cart/cart.service';
 
 @Module({
   imports: [
@@ -15,7 +17,7 @@ import { ProductSchema } from 'src/schemas/products.schema';
       { name: 'Product', schema: ProductSchema },
     ]),
   ],
-  controllers: [OrderController],
-  providers: [OrderService],
+  controllers: [OrderController, CartController],
+  providers: [OrderService, CartService],
 })
 export class OrderModule {}

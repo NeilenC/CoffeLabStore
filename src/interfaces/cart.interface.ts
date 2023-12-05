@@ -7,5 +7,6 @@ interface CartItem {
 
 export interface Cart extends Document {
   userId: string;
-  items: CartItem[];
+  cart: CartItem[];
+  cartTotal: Number;
 }
