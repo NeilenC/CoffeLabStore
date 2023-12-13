@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { MulterModule } from '@nestjs/platform-express';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
@@ -45,7 +46,9 @@ import { SubCategoryService } from 'subcategory/subcategory.service';
     MongooseModule.forFeature([{ name: 'Order', schema: OrderSchema }]),
     MongooseModule.forFeature([{ name: 'Cart', schema: CartSchema }]),
     MongooseModule.forFeature([{ name: 'SubCategory', schema: SubCategorySchema }]),
-
+    MulterModule.register({
+      dest: './uploads',  // Carpeta donde se guardarían las imágenes
+    }),
     // AuthModule,
   ],
   controllers: [

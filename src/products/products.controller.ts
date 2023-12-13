@@ -1,8 +1,6 @@
 import {
   Controller,
   Post,
-  //   Put,
-  //   Delete,
   HttpStatus,
   Body,
   Get,
@@ -12,13 +10,16 @@ import {
   Delete,
   Query,
   Put,
-  //   Body,
+  UploadedFile
 } from '@nestjs/common';
 import { Category, CreateProductDTO, SubCategory } from '../dto/products.dto';
 import { ProductsService } from './products.service';
 import { CategoriesService } from 'src/categories/categories.service';
 import { CreateCategoriesDTO } from 'src/dto/categories.dto';
 import { SubCategoryService } from 'subcategory/subcategory.service';
+import Multer from 'multer';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ProductsModule } from 'subcategory/subcategory.module';
 // import { CartService } from 'src/cart/cart.service';
 // import { Auth } from 'src/decorators/auth.decorator';
 // import { Role } from 'src/commons/enums/rol.enums';
@@ -35,42 +36,103 @@ export class ProductsController {
   // @Auth(Role.ADMIN)
   async createPost(
     @Res() res: any,
-    @Body() body:any,
     @Body() createProductDTO: CreateProductDTO,
+    @UploadedFile() imageFile: Multer.File,
   ) {
-    
-    const id = body.category
 
-    
-    const getCategory = await this.categoryService.getCategory(id)
-    const getSubCategory = await this.subCategoryService.getByCategory(id)
-    const subcategoryId = body.subcategory;
+    console.log("createProductDTO", createProductDTO);
 
-    const matchedSubcategory = getSubCategory.find((subcategory) => subcategory._id.toString() === subcategoryId);
-  
-    const category: Category = { 
-      id: getCategory._id.toString(),
-      name: getCategory.name,
+    console.log("imageFile", imageFile);
+
+    const category: Category = {
+      id: createProductDTO.category.id,
+      name: createProductDTO.category.name,
     };
-
-    if (matchedSubcategory) {
-       const subCategories: SubCategory = {
-          category: category.id,
-          name: matchedSubcategory.name,
-          id: matchedSubcategory._id.toString()
-        }
-     createProductDTO.subcategory = subCategories;
-
+  
+    if (createProductDTO.subcategory) {
+      const subCategories: SubCategory = {
+        category: category.id,
+        name: createProductDTO.subcategory.name,
+        id: createProductDTO.subcategory.id,
       };
+      createProductDTO.subcategory = subCategories;
+    }
 
-    createProductDTO.category = category;
-
-
-    const newProduct =
-      await this.productService.createProduct(createProductDTO);
-      console.log("NEW", newProduct)
+    const newProduct = await this.productService.createProduct(createProductDTO);
+    console.log("NEW", newProduct);
+  
     return res.status(HttpStatus.OK).send(newProduct);
   }
+  
+
+  // @Get('/:search')
+  // async searchProducts(@Res() res: any) {
+  //   const results = this.productService.filter((product) =>
+  //     product.name.toLowerCase().includes(query.toLowerCase())
+  //   );
+
+  //   return results;
+  // }
+
+  @Get('/search/:searchTerm')
+  async findProducts(
+    @Res() res: any,
+    @Param('searchTerm') searchTerm: string,
+  ) {
+    try {
+      const products = await this.productService.searchProducts(searchTerm);
+  
+      if (products.length === 0) {
+        res.status(404).json({ message: "No se han encontrado resultados" });
+      } else {
+        res.json(products);
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Error al realizar la búsqueda" });
+    }
+  }
+  
+
+  // @Post('/create')
+  // // @Auth(Role.ADMIN)
+  // async createPost(
+  //   @Res() res: any,
+  //   @Body() body:any,
+  //   @Body() createProductDTO: CreateProductDTO,
+  // ) {
+  //   const id = body.category
+    
+  //   console.log("BODY; BACK PRODUC", body)
+    
+  //   const getCategory = await this.categoryService.getCategory(id)
+  //   const getSubCategory = await this.subCategoryService.getByCategory(id)
+  //   const subcategoryId = body.subcategory;
+
+  //   const matchedSubcategory = getSubCategory.find((subcategory) => subcategory._id.toString() === subcategoryId);
+  
+  //   const category: Category = { 
+  //     id: getCategory._id.toString(),
+  //     name: getCategory.name,
+  //   };
+
+  //   if (matchedSubcategory) {
+  //      const subCategories: SubCategory = {
+  //         category: category.id,
+  //         name: matchedSubcategory.name,
+  //         id: matchedSubcategory._id.toString()
+  //       }
+  //    createProductDTO.subcategory = subCategories;
+
+  //     };
+
+  //   createProductDTO.category = category;
+
+
+  //   const newProduct =
+  //     await this.productService.createProduct(createProductDTO);
+  //     console.log("NEW", newProduct)
+  //   return res.status(HttpStatus.OK).send(newProduct);
+  // }
 
   @Get('/')
   async getProducts(@Res() res: any) {
@@ -86,6 +148,7 @@ export class ProductsController {
     }
     return res.status(HttpStatus.OK).send(product);
   }
+
 
   @Delete('/delete')
   async deleteProduct(@Res() res: any, @Query('productID') productID: string) {

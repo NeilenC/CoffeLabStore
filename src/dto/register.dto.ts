@@ -3,6 +3,5 @@ export class RegisterDTO {
   lastName: string;
   email: string;
   password: string;
-  address: string;
-  phoneNumber: string;
+  phoneNumber: number;
 }

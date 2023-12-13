@@ -1,6 +1,6 @@
-import { Body, Controller, Post, Res, HttpStatus, Get, Param } from '@nestjs/common';
+import { Body, Controller, Post, Res, HttpStatus, Get, Param, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDTO } from 'src/dto/users.dto';
+import { CreateUserDTO, UpdateUserDTO } from 'src/dto/users.dto';
 
 @Controller('users')
 export class UsersController {
@@ -26,4 +26,15 @@ export class UsersController {
     const user = await this.userService.findOneById(id);
     return res.send(user);
   }
+
+  @Put('/:id')
+  async updateUser(
+    @Param('id') id: string,
+    @Res() res: any,
+    @Body() updateUserDTO: UpdateUserDTO
+  ) {
+    const updatedUser = await this.userService.updateUser(id, updateUserDTO);
+    return res.status(HttpStatus.OK).send(updatedUser);
+  }
+
 }

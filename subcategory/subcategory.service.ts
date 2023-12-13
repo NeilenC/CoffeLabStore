@@ -34,22 +34,20 @@ export class SubCategoryService {
   
 
   async getByCategory(categoryId: SubCategory){
-    try{
-
-      console.log("CATEGORY ID SERVICE", categoryId)
-
+      try{
+        
       const getSubCategory = await this.subCategoryModel.find({ category: categoryId })
 
       if (getSubCategory.length === 0) {
-      console.log("No se encontraron subcategorías para el categoryId:", categoryId);
-    } else {
-      console.log("GET SUBCATEGORY BY CATEGORY", getSubCategory);
-    }
+        console.log("No se encontraron subcategorías para el categoryId:", categoryId);
+      } else {
+        // console.log("GET SUBCATEGORY BY CATEGORY", getSubCategory);
+      }
       return getSubCategory;
     } catch (e) {
-
+      
       console.log("ERROR SERVICE", e)
       throw new Error(e.message);
-    }
+   }
   }
   }

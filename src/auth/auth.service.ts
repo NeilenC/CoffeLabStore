@@ -20,7 +20,6 @@ export class AuthService {
     name,
     lastName,
     email,
-    address,
     phoneNumber,
     password,
   }: RegisterDTO) {
@@ -33,7 +32,6 @@ export class AuthService {
       name,
       lastName,
       email,
-      address,
       phoneNumber,
       password: await bcrypt.hash(password, saltOrRounds),
     });

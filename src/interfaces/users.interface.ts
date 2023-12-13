@@ -6,8 +6,7 @@ export interface Users extends Document {
   readonly lastName: string;
   readonly email: string;
   readonly password: string;
-  readonly address: string;
-  readonly phoneNumber: string;
+  readonly phoneNumber: number;
   readonly role: {
     type: 'enum';
     default: Role.USER;

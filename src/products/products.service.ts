@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Product } from 'src/interfaces/product.interface';
 import { CreateProductDTO, SubCategory } from 'src/dto/products.dto';
 import { Categories } from 'src/interfaces/categories.interfaces';
+import { ProductsModule } from './products.module';
 // import { Cart } from 'src/interfaces/cart.interface';
 // import { CartDTO } from 'src/dto/cart.dto';
 
@@ -55,6 +56,28 @@ export class ProductsService {
     const products = await this.productModel.find({ 'subcategory.id': subcategory }).exec();
     return products;
   }
+
+  // async searchProducts(query: string) {
+  //   const results = this.productModel.filter((product) =>
+  //     product.name.toLowerCase().includes(query.toLowerCase())
+  //   );
+
+  //   return results;
+  // }
+  async searchProducts(searchTerm: string): Promise<Product[]> {
+    try {
+      const searchPatterns = searchTerm.split(/\s+/).map((term) => new RegExp(term, 'i'));
+
+      const products = await this.productModel.find({
+        $and: searchPatterns.map((pattern) => ({ name: { $regex: pattern } })),
+      });
+  
+      return products;
+    } catch (error) {
+      throw error;
+    }
+  }
+  
 
   // async getFilteredProducts(query: any) {
   //   try {
