@@ -7,37 +7,38 @@ import { DeliveryMailDto } from 'src/dto/deliveryMail.dto';
 
 @Controller('order')
 export class OrderController {
-  constructor(private readonly orderService: OrderService,
-    private cartService: CartService) {}
+  constructor(
+    private readonly orderService: OrderService,
+    private cartService: CartService,
+  ) {}
 
-    @Post(':userId')
-    async createOrder(
-      @Param('userId') userId: string,
-      @Body() orderData: any,
-    ): Promise<any> {
-      console.log('Received order data:', orderData);
-      const order = await this.orderService.createOrder(userId, orderData);
-      return { message: 'Order created successfully', order };
-    }
-
-   @Get(':userId')
-    async getOrder(@Param('userId') userId: string) {
-    return await this.orderService.getOrder(userId);
+  @Post(':userId')
+  async createOrder(
+    @Param('userId') userId: string,
+    @Body() orderData: any,
+  ): Promise<any> {
+    console.log('Received order data:', orderData);
+    const order = await this.orderService.createOrder(userId, orderData);
+    console.log("ORDER", order)
+    return { message: 'Order created successfully', order };
   }
 
   @Get(':userId')
-    async getOrders(@Param('userId') userId: string) {
+  async getOrder(@Param('userId') userId: string) {
     return await this.orderService.getOrder(userId);
   }
-    
 
+  @Get('/get-orders/:userId')
+  getOrders(@Param('userId') userId: string) {
+    return this.orderService.getOrders(userId);
+  }
+  
 
-
-    // async seleccionarEntrega(@Body() body: { selectedValue: string, userId: string, orderData: any }): Promise<{ message: string }> {
-    //   const { selectedValue, userId, orderData } = body;
-    //   await this.orderService.procesarSeleccion(selectedValue, userId, orderData);
-    //   return { message: 'Selección de entrega recibida con éxito' };
-    // }
+  // async seleccionarEntrega(@Body() body: { selectedValue: string, userId: string, orderData: any }): Promise<{ message: string }> {
+  //   const { selectedValue, userId, orderData } = body;
+  //   await this.orderService.procesarSeleccion(selectedValue, userId, orderData);
+  //   return { message: 'Selección de entrega recibida con éxito' };
+  // }
 
   // @Post()
   // createOrder(@Body() orderData: any) {
@@ -45,7 +46,6 @@ export class OrderController {
   //   const order = this.orderService.createOrder(orderData);
   //   return { success: true, order };
   // }
-
 
   // @Post(':userId')
   // async createOrder(@Param('userId') userId: string): Promise<Order> {

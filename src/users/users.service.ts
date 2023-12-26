@@ -3,10 +3,16 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Users } from '../interfaces/users.interface';
 import { CreateUserDTO, UpdateUserDTO } from 'src/dto/users.dto';
+import { sign } from 'jsonwebtoken';
+import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel('Users') readonly usersModel: Model<Users>) {}
+  constructor(
+    @InjectModel('Users') readonly usersModel: Model<Users>,
+    private jwtService: JwtService,
+  ) {}
 
   async register(createUserDTO: CreateUserDTO): Promise<Users> {
     const user = new this.usersModel(createUserDTO);
@@ -25,18 +31,28 @@ export class UsersService {
     return await this.usersModel.find();
   }
 
-  async updateUser(userId: string, updateUserDTO: UpdateUserDTO): Promise<Users> {
-    const user = await this.usersModel.findOne({userId});
+  async updateUser(id: string, updateUserDTO: UpdateUserDTO): Promise<Users> {
+    console.log('ID EN SERVICE', id);
+    const user = await this.usersModel.findOneAndUpdate(
+      { _id: id },
+      updateUserDTO,
+      { new: true },
+    );
 
+    if (updateUserDTO.password) {
+      const saltOrRounds = await bcrypt.genSalt();
+
+      const hashedPassword = await bcrypt.hash(
+        updateUserDTO.password,
+        saltOrRounds,
+      );
+      console.log('HASHEDPASS', hashedPassword);
+      user.password = hashedPassword;
+    }
+    console.log('USER', user);
     if (!user) {
       throw new NotFoundException('User not found');
     }
-
-    // Actualizar propiedades según las recibidas en el DTO
-    Object.assign(user, updateUserDTO);
-    console.log(user, updateUserDTO);
-
-    // Guardar los cambios en la base de datos
-    return await user.save();
+    return user;
   }
 }

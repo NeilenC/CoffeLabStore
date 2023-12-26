@@ -23,7 +23,8 @@ export class CategoriesController {
     @Res() res: any,
     @Body() createCategoriesDTO: CreateCategoriesDTO,
   ) {
-    const newCategory = await this.categoriesService.createCategory(createCategoriesDTO);
+    const newCategory =
+      await this.categoriesService.createCategory(createCategoriesDTO);
     return res.status(HttpStatus.OK).send(newCategory);
   }
 

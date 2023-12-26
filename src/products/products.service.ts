@@ -12,8 +12,8 @@ import { ProductsModule } from './products.module';
 export class ProductsService {
   constructor(
     @InjectModel('Product') readonly productModel: Model<Product>, // @InjectModel('Cart') readonly cartModel: Model<Cart>,
-    // @InjectModel('SubCategory') readonly subCategoryModel: Model<SubCategory>, 
-  ) {}
+  ) // @InjectModel('SubCategory') readonly subCategoryModel: Model<SubCategory>,
+  {}
 
   async getProducts(): Promise<Product[]> {
     const products = await this.productModel.find();
@@ -26,8 +26,8 @@ export class ProductsService {
   }
 
   async createProduct(createProductDTO: CreateProductDTO): Promise<Product> {
-    const product = new this.productModel(createProductDTO); 
-    return await product.save(); 
+    const product = new this.productModel(createProductDTO);
+    return await product.save();
   }
 
   async deleteProduct(productID: string): Promise<Product> {
@@ -48,12 +48,16 @@ export class ProductsService {
   }
 
   async findByCategory(category: string): Promise<Product[]> {
-    const products = await this.productModel.find({ category: category }).exec();
+    const products = await this.productModel
+      .find({ category: category })
+      .exec();
     return products;
   }
 
   async findBySubCategory(subcategory: string): Promise<Product[]> {
-    const products = await this.productModel.find({ 'subcategory.id': subcategory }).exec();
+    const products = await this.productModel
+      .find({ 'subcategory.id': subcategory })
+      .exec();
     return products;
   }
 
@@ -66,18 +70,19 @@ export class ProductsService {
   // }
   async searchProducts(searchTerm: string): Promise<Product[]> {
     try {
-      const searchPatterns = searchTerm.split(/\s+/).map((term) => new RegExp(term, 'i'));
+      const searchPatterns = searchTerm
+        .split(/\s+/)
+        .map((term) => new RegExp(term, 'i'));
 
       const products = await this.productModel.find({
         $and: searchPatterns.map((pattern) => ({ name: { $regex: pattern } })),
       });
-  
+
       return products;
     } catch (error) {
       throw error;
     }
   }
-  
 
   // async getFilteredProducts(query: any) {
   //   try {
@@ -90,7 +95,7 @@ export class ProductsService {
   //       page = 1,
   //       limit = 10
   //     } = query;
-      
+
   //     // Consulta para filtrar productos segun los parámetros de la solicitud.
   //     const filter: any = {};
   //     if (min) filter.price = { $gte: min };

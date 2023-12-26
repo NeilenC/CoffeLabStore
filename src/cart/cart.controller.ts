@@ -14,7 +14,6 @@ import { CartDTO } from 'src/dto/cart.dto';
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
-
   @Post(':userId')
   addToCart(@Param('userId') userId: string, @Body() cartItems: any): void {
     this.cartService.addToCart(userId, cartItems);
@@ -25,9 +24,6 @@ export class CartController {
     return this.cartService.getCart(cartId);
   }
 
-
-
-
   // @Get('/:userId')
   // async getCart(@Param('userId') userId: string) {
   //   return this.cartService.getCart(userId);
@@ -36,7 +32,7 @@ export class CartController {
   // @Post('/:userId')
   // async addToCart(
   //   @Body('userId') userId: string,
-  //   @Body() addToCartDto: CartDTO, 
+  //   @Body() addToCartDto: CartDTO,
   // ) {
   //   try{
   //   if (
@@ -54,7 +50,7 @@ export class CartController {
   //   addToCartDto.items[0].productId,
   //   addToCartDto.items[0].quantity,
   //   );
-    
+
   //   return { cart };
   // }catch(e){
   //   console.log("EERPR CATCH", e)

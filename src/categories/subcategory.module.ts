@@ -15,5 +15,3 @@ import { SubCategorySchema } from 'src/schemas/subcategory.schema';
   providers: [CategoriesService],
 })
 export class CategoriesModule {}
-
-

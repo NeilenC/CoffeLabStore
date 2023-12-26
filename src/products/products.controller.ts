@@ -10,7 +10,7 @@ import {
   Delete,
   Query,
   Put,
-  UploadedFile
+  UploadedFile,
 } from '@nestjs/common';
 import { Category, CreateProductDTO, SubCategory } from '../dto/products.dto';
 import { ProductsService } from './products.service';
@@ -39,16 +39,15 @@ export class ProductsController {
     @Body() createProductDTO: CreateProductDTO,
     @UploadedFile() imageFile: Multer.File,
   ) {
+    console.log('createProductDTO', createProductDTO);
 
-    console.log("createProductDTO", createProductDTO);
-
-    console.log("imageFile", imageFile);
+    console.log('imageFile', imageFile);
 
     const category: Category = {
       id: createProductDTO.category.id,
       name: createProductDTO.category.name,
     };
-  
+
     if (createProductDTO.subcategory) {
       const subCategories: SubCategory = {
         category: category.id,
@@ -58,12 +57,12 @@ export class ProductsController {
       createProductDTO.subcategory = subCategories;
     }
 
-    const newProduct = await this.productService.createProduct(createProductDTO);
-    console.log("NEW", newProduct);
-  
+    const newProduct =
+      await this.productService.createProduct(createProductDTO);
+    console.log('NEW', newProduct);
+
     return res.status(HttpStatus.OK).send(newProduct);
   }
-  
 
   // @Get('/:search')
   // async searchProducts(@Res() res: any) {
@@ -75,23 +74,19 @@ export class ProductsController {
   // }
 
   @Get('/search/:searchTerm')
-  async findProducts(
-    @Res() res: any,
-    @Param('searchTerm') searchTerm: string,
-  ) {
+  async findProducts(@Res() res: any, @Param('searchTerm') searchTerm: string) {
     try {
       const products = await this.productService.searchProducts(searchTerm);
-  
+
       if (products.length === 0) {
-        res.status(404).json({ message: "No se han encontrado resultados" });
+        res.status(404).json({ message: 'No se han encontrado resultados' });
       } else {
         res.json(products);
       }
     } catch (error) {
-      res.status(500).json({ message: "Error al realizar la búsqueda" });
+      res.status(500).json({ message: 'Error al realizar la búsqueda' });
     }
   }
-  
 
   // @Post('/create')
   // // @Auth(Role.ADMIN)
@@ -101,16 +96,16 @@ export class ProductsController {
   //   @Body() createProductDTO: CreateProductDTO,
   // ) {
   //   const id = body.category
-    
+
   //   console.log("BODY; BACK PRODUC", body)
-    
+
   //   const getCategory = await this.categoryService.getCategory(id)
   //   const getSubCategory = await this.subCategoryService.getByCategory(id)
   //   const subcategoryId = body.subcategory;
 
   //   const matchedSubcategory = getSubCategory.find((subcategory) => subcategory._id.toString() === subcategoryId);
-  
-  //   const category: Category = { 
+
+  //   const category: Category = {
   //     id: getCategory._id.toString(),
   //     name: getCategory.name,
   //   };
@@ -126,7 +121,6 @@ export class ProductsController {
   //     };
 
   //   createProductDTO.category = category;
-
 
   //   const newProduct =
   //     await this.productService.createProduct(createProductDTO);
@@ -149,7 +143,6 @@ export class ProductsController {
     return res.status(HttpStatus.OK).send(product);
   }
 
-
   @Delete('/delete')
   async deleteProduct(@Res() res: any, @Query('productID') productID: string) {
     const deletedProduct = await this.productService.deleteProduct(productID);
@@ -170,29 +163,32 @@ export class ProductsController {
     @Param('productID') productID: string,
   ) {
     const categoryId = body.category;
-  
+
     const getCategory = await this.categoryService.getCategory(categoryId);
-  
-    const subCategories = await this.subCategoryService.getByCategory(categoryId);
-  
+
+    const subCategories =
+      await this.subCategoryService.getByCategory(categoryId);
+
     const subcategoryId = body.subcategory;
-  
-    const matchedSubcategory = subCategories.find((subcategory) => subcategory._id.toString() === subcategoryId);
-  
+
+    const matchedSubcategory = subCategories.find(
+      (subcategory) => subcategory._id.toString() === subcategoryId,
+    );
+
     if (matchedSubcategory) {
       const category: Category = {
         id: getCategory._id.toString(),
         name: getCategory.name,
       };
-  
+
       const subcategory: SubCategory = {
         id: matchedSubcategory._id.toString(),
         name: matchedSubcategory.name,
-        category: category.id
+        category: category.id,
       };
 
-      createProductDTO.subcategory = subcategory
-  
+      createProductDTO.subcategory = subcategory;
+
       const updatedProduct = await this.productService.updateProduct(
         productID,
         createProductDTO,
@@ -203,10 +199,10 @@ export class ProductsController {
         updatedProduct,
       });
     } else {
-     throw new Error
+      throw new Error();
     }
   }
-  
+
   @Get('byCategory/:category')
   findByCategory(@Param('category') category: string) {
     return this.productService.findByCategory(category);

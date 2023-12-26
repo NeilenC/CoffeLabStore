@@ -7,5 +7,5 @@ class CartItemDTO {
 export class CartDTO {
   userId: string;
   items: CartItemDTO[];
-  cartTotal: number
+  cartTotal: number;
 }

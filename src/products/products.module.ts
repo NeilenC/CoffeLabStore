@@ -14,10 +14,18 @@ import { SubCategoryController } from 'subcategory/subcategory.controller';
   imports: [
     ProductsModule,
     MongooseModule.forFeature([{ name: 'Product', schema: ProductSchema }]),
-    MongooseModule.forFeature([{name: 'Categories', schema: CategoriesSchema }]),
-    MongooseModule.forFeature([{name: 'SubCategory', schema: SubCategorySchema }])
+    MongooseModule.forFeature([
+      { name: 'Categories', schema: CategoriesSchema },
+    ]),
+    MongooseModule.forFeature([
+      { name: 'SubCategory', schema: SubCategorySchema },
+    ]),
   ],
-  controllers: [ProductsController, CategoriesController, SubCategoryController],
+  controllers: [
+    ProductsController,
+    CategoriesController,
+    SubCategoryController,
+  ],
   providers: [ProductsService, CategoriesService, SubCategoryService],
 })
 export class ProductsModule {}

@@ -1,6 +1,16 @@
-import { Body, Controller, Post, Res, HttpStatus, Get, Param, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Res,
+  HttpStatus,
+  Get,
+  Param,
+  Put,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDTO, UpdateUserDTO } from 'src/dto/users.dto';
+import { sign } from 'jsonwebtoken';
 
 @Controller('users')
 export class UsersController {
@@ -19,10 +29,7 @@ export class UsersController {
   }
 
   @Get('/:id')
-  async findOne(
-    @Param('id') id: string,
-    @Res() res: any
-  ) {
+  async findOne(@Param('id') id: string, @Res() res: any) {
     const user = await this.userService.findOneById(id);
     return res.send(user);
   }
@@ -31,10 +38,10 @@ export class UsersController {
   async updateUser(
     @Param('id') id: string,
     @Res() res: any,
-    @Body() updateUserDTO: UpdateUserDTO
+    @Body() updateUserDTO: UpdateUserDTO,
   ) {
+    console.log('id', id);
     const updatedUser = await this.userService.updateUser(id, updateUserDTO);
     return res.status(HttpStatus.OK).send(updatedUser);
   }
-
 }

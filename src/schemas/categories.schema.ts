@@ -4,5 +4,3 @@ export const CategoriesSchema = new Schema({
   name: String,
   description: String,
 });
-
-

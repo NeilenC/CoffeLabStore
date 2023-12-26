@@ -12,37 +12,43 @@ export class CartService {
     @InjectModel('Product') readonly productModel: Model<Product>,
   ) {}
 
-
   async addToCart(userId: string, cartItems: any): Promise<Cart> {
     try {
-      if (!Array.isArray(cartItems.productDetails)) {   
-        throw new Error('Error al procesar la solicitud: cartItems no es un arreglo');
+      if (!Array.isArray(cartItems.productDetails)) {
+        throw new Error(
+          'Error al procesar la solicitud: cartItems no es un arreglo',
+        );
       }
-  
-      let cart = await this.cartModel.findOne({ userId }) || null;
+
+      let cart = (await this.cartModel.findOne({ userId })) || null;
       const cartItemsArr = cartItems.productDetails;
-  
+
       if (!cart) {
         cart = await this.cartModel.create({ userId, cart: cartItemsArr });
       } else {
- 
         const prices = await Promise.all(
-          cartItemsArr.map(async (item:any) => {
-            const product = await this.productModel.findById(item.productId).exec();
+          cartItemsArr.map(async (item: any) => {
+            const product = await this.productModel
+              .findById(item.productId)
+              .exec();
             if (!product) {
-              throw new Error(`No se encontró el producto con ID: ${item.productId}`);
+              throw new Error(
+                `No se encontró el producto con ID: ${item.productId}`,
+              );
             }
             return product.price * item.quantity;
-          })
+          }),
         );
-  
+
         const newCartTotal = prices.reduce((total, price) => total + price, 0);
-        
+
         cart.cartTotal = newCartTotal;
-  
+
         for (const cartItem of cartItemsArr) {
-          const existingCartItem = cart.cart.find(item => item.productId === cartItem.productId);
-  
+          const existingCartItem = cart.cart.find(
+            (item) => item.productId === cartItem.productId,
+          );
+
           if (existingCartItem) {
             existingCartItem.quantity += cartItem.quantity;
           } else {
@@ -50,23 +56,23 @@ export class CartService {
           }
         }
       }
-      
+
       return await cart.save();
     } catch (error) {
       console.error('Error en addToCart:', error);
       throw new Error('Error al procesar la solicitud');
     }
   }
-  
-  
-  
-  
+
   async getCart(cartId: string): Promise<Cart> {
     return this.cartModel.findOne({ cartId }).exec();
   }
 
   async clearCart(cartId: string): Promise<void> {
-    const cart = await this.cartModel.findOneAndUpdate({ cartId }, { $set: { cart: [] } });
+    const cart = await this.cartModel.findOneAndUpdate(
+      { cartId },
+      { $set: { cart: [] } },
+    );
   }
 
   // async getCart(userId: string): Promise<Cart> {
@@ -132,7 +138,7 @@ export class CartService {
   //   const cart = await this.cartModel.findOne({ userId }).exec();
 
   //   if (!cart) {
-  
+
   //     throw new Error('Carrito no encontrado');
   //   }
 

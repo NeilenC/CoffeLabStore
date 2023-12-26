@@ -42,12 +42,16 @@ import { SubCategoryService } from 'subcategory/subcategory.service';
     MongooseModule.forFeature([{ name: 'Product', schema: ProductSchema }]),
     MongooseModule.forFeature([{ name: 'Users', schema: UserSchema }]),
     MongooseModule.forFeature([{ name: 'Users', schema: UserSchema }]),
-    MongooseModule.forFeature([{ name: 'Categories', schema: CategoriesSchema }]),
+    MongooseModule.forFeature([
+      { name: 'Categories', schema: CategoriesSchema },
+    ]),
     MongooseModule.forFeature([{ name: 'Order', schema: OrderSchema }]),
     MongooseModule.forFeature([{ name: 'Cart', schema: CartSchema }]),
-    MongooseModule.forFeature([{ name: 'SubCategory', schema: SubCategorySchema }]),
+    MongooseModule.forFeature([
+      { name: 'SubCategory', schema: SubCategorySchema },
+    ]),
     MulterModule.register({
-      dest: './uploads',  // Carpeta donde se guardarían las imágenes
+      dest: './uploads', // Carpeta donde se guardarían las imágenes
     }),
     // AuthModule,
   ],
@@ -58,7 +62,7 @@ import { SubCategoryService } from 'subcategory/subcategory.service';
     UsersController,
     OrderController,
     CartController,
-    SubCategoryController
+    SubCategoryController,
   ],
   providers: [
     AppService,
@@ -67,7 +71,7 @@ import { SubCategoryService } from 'subcategory/subcategory.service';
     UsersService,
     OrderService,
     CartService,
-    SubCategoryService
+    SubCategoryService,
   ],
 })
 export class AppModule {}

@@ -27,14 +27,17 @@ export class CategoriesService {
     return await category.save();
   }
 
-  async addSubcategories(categoryId: string, subcategories: { name: string }[]): Promise<Categories | null> {
+  async addSubcategories(
+    categoryId: string,
+    subcategories: { name: string }[],
+  ): Promise<Categories | null> {
     try {
       const category = await this.categoriesModel.findById(categoryId);
-  
+
       if (!category) {
-        return null; 
+        return null;
       }
-  
+
       // subcategories.forEach((subcategory) => {
       //   const subcategoryName = subcategory.name;
       //   const subcategoryExists = category.subcategories.find((s) => s.name === subcategoryName);
@@ -42,14 +45,13 @@ export class CategoriesService {
       //     category.subcategories.push({ name: subcategoryName });
       //   }
       // });
-  
+
       const updatedCategory = await category.save();
       return updatedCategory;
     } catch (error) {
       throw error;
     }
   }
-  
 
   async deleteCategory(categoryID: string): Promise<Categories> {
     const deletedCategory =

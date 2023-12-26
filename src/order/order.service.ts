@@ -7,7 +7,6 @@ import { Order } from 'src/interfaces/order.interface';
 import { Product } from 'src/interfaces/product.interface';
 import { v4 as uuidv4 } from 'uuid';
 
-
 @Injectable()
 export class OrderService {
   constructor(
@@ -19,15 +18,15 @@ export class OrderService {
 
   async createOrder(userId: string, orderData: any): Promise<any> {
     const cart = await this.cartModel.find({ userId }).lean();
-  console.log("CART EN ORDER SERVICE", cart)
+    console.log('CART EN ORDER SERVICE', cart);
     const { userData, shoppingData, paymentData } = orderData;
 
-    if(paymentData.deliveryCharge) {
-     cart[0].cartTotal += paymentData.deliveryCharge;
+    if (paymentData.deliveryCharge) {
+      cart[0].cartTotal += paymentData.deliveryCharge;
     }
     //NUMERO DE SEGUIMIENTO UNICO MEDIANTE UUID
     const trackingNumber = uuidv4();
-  
+
     const order = await this.orderModel.create({
       userId,
       cartId: cart,
@@ -40,11 +39,11 @@ export class OrderService {
       trackingNumber: trackingNumber,
     });
 
-     // Reducir el stock de los productos vendidos
-     for (const item of cart[0].cart) {
+    // Reducir el stock de los productos vendidos
+    for (const item of cart[0].cart) {
       const product = await this.productModel.findById(item.productId);
 
-      console.log("PRDUCTO", product)
+      console.log('PRDUCTO', product);
       if (product) {
         product.stock -= item.quantity;
         await product.save();
@@ -52,7 +51,7 @@ export class OrderService {
     }
 
     await this.cartService.clearCart(userId);
-  
+
     return order;
   }
 
@@ -61,9 +60,15 @@ export class OrderService {
     return getOrder;
   }
 
-  async getOrders(userId: string) {
-    const getOrder = await this.orderModel.find({ userId }).exec();
-    return getOrder;
+  async getOrders(userId: string): Promise<Order[]> {
+    try {
+
+      const orders = await this.orderModel.find({ userId }).exec();
+      return orders;
+    } catch (error) {
+      console.error('Error:', error);
+      throw new Error('Error al obtener las órdenes');
+    }
   }
   // async createOrder(userId: string): Promise<Order> {
   //   const cart = await this.cartModel.find({ userId }).exec();
@@ -127,6 +132,4 @@ export class OrderService {
 
   //   return order;
   // }
-
-
 }
