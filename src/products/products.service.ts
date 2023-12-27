@@ -75,54 +75,48 @@ export class ProductsService {
         .map((term) => new RegExp(term, 'i'));
 
       const products = await this.productModel.find({
-        $and: searchPatterns.map((pattern) => ({ name: { $regex: pattern } })),
+        $and: searchPatterns.map((pattern) =>  ({
+          $or: [
+            // { 'category.name': { $regex: pattern } },
+            // { 'subcategory.id': { $regex: pattern } },
+            { 'keys': { $in: searchPatterns } },
+        
+          ]
+          
+        })),
       });
+
+      // const searchPattern = new RegExp(searchTerm, 'i');
+
+      // const products = await this.productModel.find({
+      //   $or: [
+      //     { 'name': { $regex: searchPattern }  },
+      //     { 'category.name': { $regex: searchPattern }  },
+      //     { 'subcategory.id': { $regex: searchPattern }   }
+      //   ],
+      // }).collation({ locale: 'en', strength: 1 });
+
+      return products;
+    } catch (error) {
+      console.log("error", error)
+      throw error;
+    }
+  }
+
+  async searchProductsByCategory( categoryName: string): Promise<Product[]> {
+    try {
+      const searchPattern = new RegExp(categoryName, 'i');
+
+      const products = await this.productModel.find({
+        'category.name': { $regex: searchPattern },
+      }).collation({ locale: 'en', strength: 2 });
 
       return products;
     } catch (error) {
       throw error;
     }
   }
-
-  // async getFilteredProducts(query: any) {
-  //   try {
-  //     const {
-  //       sortOrder,
-  //       rating,
-  //       max,
-  //       min,
-  //       category,
-  //       page = 1,
-  //       limit = 10
-  //     } = query;
-
-  //     // Consulta para filtrar productos segun los parámetros de la solicitud.
-  //     const filter: any = {};
-  //     if (min) filter.price = { $gte: min };
-  //     if (max) filter.price = { ...filter.price, $lte: max };
-  //     if (rating) filter.rating = rating;
-  //     if (category) filter.category = category;
-
-  //     // Consulta a la base de datos utilizando el modelo de productos.
-  //     const products = await this.productModel
-  //       .find(filter)
-  //       .sort(sortOrder)
-  //       .skip((page - 1) * limit)
-  //       .limit(limit)
-  //       .exec();
-
-  //     const totalProducts = await this.productModel.countDocuments(filter);
-
-  //     return {
-  //       products,
-  //       totalPages: Math.ceil(totalProducts / limit),
-  //       currentPage: page,
-  //       count: products.length,
-  //     };
-  //   } catch (error) {
-  //     throw new Error('Error al obtener los productos filtrados');
-  //   }
-  // }
+  
 
   //Disminuir el stock cuando se realice la compra del producto
   // async decreaseStock(productId: string, quantity: number): Promise<Product> {

@@ -1,9 +1,10 @@
 export class CreateProductDTO {
-  readonly name: string;
-  readonly description: string;
-  readonly imageURL: string;
-  readonly imageFile: string;
-  readonly price: number;
+  name: string;
+  description: string;
+  imageURL: string;
+  imageFile: string;
+  price: number;
+  keys: string[];
   stock: number;
   category: Category;
   subcategory: SubCategory;

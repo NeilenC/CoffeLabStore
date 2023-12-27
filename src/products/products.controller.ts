@@ -88,6 +88,15 @@ export class ProductsController {
     }
   }
 
+  @Get('search/category/:searchTerm')
+  async searchProductsByCategory(
+    @Param('searchTerm') searchTerm: string,
+  ) {
+    const products = await this.productService.searchProductsByCategory(searchTerm);
+    return { products };
+  }
+
+
   // @Post('/create')
   // // @Auth(Role.ADMIN)
   // async createPost(
@@ -162,32 +171,32 @@ export class ProductsController {
     @Body() createProductDTO: CreateProductDTO,
     @Param('productID') productID: string,
   ) {
-    const categoryId = body.category;
+    // const categoryId = body.category;
 
-    const getCategory = await this.categoryService.getCategory(categoryId);
+    // const getCategory = await this.categoryService.getCategory(categoryId);
 
-    const subCategories =
-      await this.subCategoryService.getByCategory(categoryId);
+    // const subCategories =
+    //   await this.subCategoryService.getByCategory(categoryId);
 
-    const subcategoryId = body.subcategory;
+    // const subcategoryId = body.subcategory;
 
-    const matchedSubcategory = subCategories.find(
-      (subcategory) => subcategory._id.toString() === subcategoryId,
-    );
+    // const matchedSubcategory = subCategories.find(
+    //   (subcategory) => subcategory._id.toString() === subcategoryId,
+    // );
 
-    if (matchedSubcategory) {
-      const category: Category = {
-        id: getCategory._id.toString(),
-        name: getCategory.name,
-      };
+    // if (matchedSubcategory) {
+    //   const category: Category = {
+    //     id: getCategory._id.toString(),
+    //     name: getCategory.name,
+    //   };
 
-      const subcategory: SubCategory = {
-        id: matchedSubcategory._id.toString(),
-        name: matchedSubcategory.name,
-        category: category.id,
-      };
-
-      createProductDTO.subcategory = subcategory;
+    //   const subcategory: SubCategory = {
+    //     id: matchedSubcategory._id.toString(),
+    //     name: matchedSubcategory.name,
+    //     category: category.id,
+    //   };
+      
+      createProductDTO.keys = body.keys;
 
       const updatedProduct = await this.productService.updateProduct(
         productID,
@@ -198,9 +207,9 @@ export class ProductsController {
         message: 'Modificado con éxito',
         updatedProduct,
       });
-    } else {
-      throw new Error();
-    }
+    // } else {
+    //   throw new Error();
+    // }
   }
 
   @Get('byCategory/:category')
