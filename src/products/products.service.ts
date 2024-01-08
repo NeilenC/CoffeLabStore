@@ -19,6 +19,10 @@ export class ProductsService {
     const products = await this.productModel.find();
     return products;
   }
+    async getProductsByIds(productIds: string[]): Promise<Product[]> {
+      const products = await this.productModel.find({ _id: { $in: productIds } });
+      return products;
+    }
 
   async getProduct(id: string): Promise<Product> {
     const product = await this.productModel.findById(id);
@@ -48,8 +52,9 @@ export class ProductsService {
   }
 
   async findByCategory(category: string): Promise<Product[]> {
+
     const products = await this.productModel
-      .find({ category: category })
+      .find({ 'category.id': category })
       .exec();
     return products;
   }
@@ -58,16 +63,11 @@ export class ProductsService {
     const products = await this.productModel
       .find({ 'subcategory.id': subcategory })
       .exec();
+
     return products;
   }
 
-  // async searchProducts(query: string) {
-  //   const results = this.productModel.filter((product) =>
-  //     product.name.toLowerCase().includes(query.toLowerCase())
-  //   );
-
-  //   return results;
-  // }
+ 
   async searchProducts(searchTerm: string): Promise<Product[]> {
     try {
       const searchPatterns = searchTerm
@@ -77,24 +77,12 @@ export class ProductsService {
       const products = await this.productModel.find({
         $and: searchPatterns.map((pattern) =>  ({
           $or: [
-            // { 'category.name': { $regex: pattern } },
-            // { 'subcategory.id': { $regex: pattern } },
-            { 'keys': { $in: searchPatterns } },
-        
+            { 'category.name': { $regex: pattern } },
+            { 'subcategory.id': { $regex: pattern } },
+            { 'keys': { $regex: pattern } },
           ]
-          
         })),
       });
-
-      // const searchPattern = new RegExp(searchTerm, 'i');
-
-      // const products = await this.productModel.find({
-      //   $or: [
-      //     { 'name': { $regex: searchPattern }  },
-      //     { 'category.name': { $regex: searchPattern }  },
-      //     { 'subcategory.id': { $regex: searchPattern }   }
-      //   ],
-      // }).collation({ locale: 'en', strength: 1 });
 
       return products;
     } catch (error) {
@@ -116,45 +104,5 @@ export class ProductsService {
       throw error;
     }
   }
-  
 
-  //Disminuir el stock cuando se realice la compra del producto
-  // async decreaseStock(productId: string, quantity: number): Promise<Product> {
-  //   const product = await this.getProductById(productId);
-
-  //   if (!product) {
-  //     throw new Error('Producto no encontrado');
-  //   }
-
-  //   if (product.stock < quantity) {
-  //     throw new Error('Stock insuficiente');
-  //   }
-
-  //   product.stock -= quantity;
-  //   await product.save();
-
-  //   return product;
-  // }
-
-  // async getProductById(productId: string): Promise<Product | null> {
-  //   return this.productModel.findById(productId).exec();
-  // }
-
-  // async addToCart(cartDTO: CartDTO): Promise<Cart> {
-  //   const productId = cartDTO.cart; // Supongo que productId se encuentra dentro de cartDTO
-
-  //   const product = await this.productModel.findById(productId);
-
-  //   if (!product) {
-  //     throw new Error('Product not found');
-  //   }
-
-  //   const newCartItem: Cart = new this.cartModel({
-  //     cart: productId,
-  //   });
-
-  //   const cartItem = await newCartItem.save();
-
-  //   return cartItem;
-  // }
 }

@@ -14,6 +14,7 @@ export class SubCategoryService {
   async createSubCategory(createSubCategoryDTO: SubCategory) {
     try {
       const categoryId = createSubCategoryDTO.category;
+      console.log("categoyrid", categoryId)
       const category = await this.categoryModel.findById(categoryId);
 
       if (!category) {

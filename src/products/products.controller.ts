@@ -97,46 +97,6 @@ export class ProductsController {
   }
 
 
-  // @Post('/create')
-  // // @Auth(Role.ADMIN)
-  // async createPost(
-  //   @Res() res: any,
-  //   @Body() body:any,
-  //   @Body() createProductDTO: CreateProductDTO,
-  // ) {
-  //   const id = body.category
-
-  //   console.log("BODY; BACK PRODUC", body)
-
-  //   const getCategory = await this.categoryService.getCategory(id)
-  //   const getSubCategory = await this.subCategoryService.getByCategory(id)
-  //   const subcategoryId = body.subcategory;
-
-  //   const matchedSubcategory = getSubCategory.find((subcategory) => subcategory._id.toString() === subcategoryId);
-
-  //   const category: Category = {
-  //     id: getCategory._id.toString(),
-  //     name: getCategory.name,
-  //   };
-
-  //   if (matchedSubcategory) {
-  //      const subCategories: SubCategory = {
-  //         category: category.id,
-  //         name: matchedSubcategory.name,
-  //         id: matchedSubcategory._id.toString()
-  //       }
-  //    createProductDTO.subcategory = subCategories;
-
-  //     };
-
-  //   createProductDTO.category = category;
-
-  //   const newProduct =
-  //     await this.productService.createProduct(createProductDTO);
-  //     console.log("NEW", newProduct)
-  //   return res.status(HttpStatus.OK).send(newProduct);
-  // }
-
   @Get('/')
   async getProducts(@Res() res: any) {
     const products = await this.productService.getProducts();
@@ -150,6 +110,11 @@ export class ProductsController {
       return NotFoundException;
     }
     return res.status(HttpStatus.OK).send(product);
+  }
+  @Post('byIds')
+  async getProductsByIds(@Body() body: { productIds: string[] }) {
+    const products = await this.productService.getProductsByIds(body.productIds);
+    return products;
   }
 
   @Delete('/delete')
@@ -171,30 +136,6 @@ export class ProductsController {
     @Body() createProductDTO: CreateProductDTO,
     @Param('productID') productID: string,
   ) {
-    // const categoryId = body.category;
-
-    // const getCategory = await this.categoryService.getCategory(categoryId);
-
-    // const subCategories =
-    //   await this.subCategoryService.getByCategory(categoryId);
-
-    // const subcategoryId = body.subcategory;
-
-    // const matchedSubcategory = subCategories.find(
-    //   (subcategory) => subcategory._id.toString() === subcategoryId,
-    // );
-
-    // if (matchedSubcategory) {
-    //   const category: Category = {
-    //     id: getCategory._id.toString(),
-    //     name: getCategory.name,
-    //   };
-
-    //   const subcategory: SubCategory = {
-    //     id: matchedSubcategory._id.toString(),
-    //     name: matchedSubcategory.name,
-    //     category: category.id,
-    //   };
       
       createProductDTO.keys = body.keys;
 
@@ -207,9 +148,7 @@ export class ProductsController {
         message: 'Modificado con éxito',
         updatedProduct,
       });
-    // } else {
-    //   throw new Error();
-    // }
+ 
   }
 
   @Get('byCategory/:category')
@@ -222,33 +161,5 @@ export class ProductsController {
     return this.productService.findBySubCategory(subcategory);
   }
 
-  // @Get('list')
-  // async filterProducts(
-  //   @Query() query: string,
-  //   @Res() res: any
-  // ) {
-  //   try {
-  //     const products = await this.productService.getFilteredProducts(query);
-  //     res.status(200).json(products);
-  //   } catch (error) {
-  //     console.log('error', error);
-  //     res.status(400).json({
-  //       error: 'No se pudoooo'
-  //     });
-  //   }
-  // }
 
-  // @Post('addToCart')
-  // async add(@Body() productId: string) {
-  //   try {
-  //     // Llama al método addToCart del servicio de productos
-  //     const cartItem = this.cartService.addToCart(productId);
-
-  //     // Si todo va bien, puedes devolver el elemento del carrito agregado como respuesta
-  //     return cartItem;
-  //   } catch (error) {
-  //     // Maneja errores como el producto no encontrado o cualquier otro error de negocio aquí
-  //     throw new NotFoundException(error.message);
-  //   }
-  // }
 }

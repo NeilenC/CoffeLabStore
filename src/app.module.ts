@@ -28,6 +28,7 @@ import { CartSchema } from './schemas/cart.schema';
 import { SubCategorySchema } from './schemas/subcategory.schema';
 import { SubCategoryController } from 'subcategory/subcategory.controller';
 import { SubCategoryService } from 'subcategory/subcategory.service';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { SubCategoryService } from 'subcategory/subcategory.service';
     MulterModule.register({
       dest: './uploads', // Carpeta donde se guardarían las imágenes
     }),
+    FavoritesModule,
     // AuthModule,
   ],
   controllers: [
