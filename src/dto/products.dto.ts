@@ -8,6 +8,7 @@ export class CreateProductDTO {
   stock: number;
   category: Category;
   subcategory: SubCategory;
+  productPreferences: ProductPreferences
 }
 
 export class Category {
@@ -19,4 +20,9 @@ export class SubCategory {
   id: any;
   name: any;
   category: any;
+}
+
+export class ProductPreferences {
+  grind: string;
+  color: string;
 }

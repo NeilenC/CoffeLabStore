@@ -7,6 +7,10 @@ export const ProductSchema = new Schema({
   price: Number,
   stock: Number,
   keys: [String],
+  productPreferences : {
+    grind: String,
+    color: String,
+  },
   createAt: {
     type: Date,
     default: Date.now,
@@ -22,3 +26,4 @@ export const ProductSchema = new Schema({
     category: String,
   },
 });
+
