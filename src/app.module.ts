@@ -52,7 +52,7 @@ import { FavoritesModule } from './favorites/favorites.module';
       { name: 'SubCategory', schema: SubCategorySchema },
     ]),
     MulterModule.register({
-      dest: './uploads', // Carpeta donde se guardarían las imágenes
+      dest: './uploads', 
     }),
     FavoritesModule,
     // AuthModule,

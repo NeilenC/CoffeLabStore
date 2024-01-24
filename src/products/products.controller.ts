@@ -39,9 +39,6 @@ export class ProductsController {
     @Body() createProductDTO: CreateProductDTO,
     @UploadedFile() imageFile: Multer.File,
   ) {
-    console.log('createProductDTO', createProductDTO);
-
-    console.log('imageFile', imageFile);
 
     const category: Category = {
       id: createProductDTO.category.id,
@@ -111,9 +108,10 @@ export class ProductsController {
     }
     return res.status(HttpStatus.OK).send(product);
   }
+
   @Post('byIds')
-  async getProductsByIds(@Body() body: { productIds: string[] }) {
-    const products = await this.productService.getProductsByIds(body.productIds);
+  async getProductsByIds(@Body() body: any) {
+    const products = await this.productService.getProductsByIds(body.userFavorites);
     return products;
   }
 

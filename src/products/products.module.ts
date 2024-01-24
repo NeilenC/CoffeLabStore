@@ -13,11 +13,9 @@ import { SubCategoryController } from 'subcategory/subcategory.controller';
 @Module({
   imports: [
     ProductsModule,
-    MongooseModule.forFeature([{ name: 'Product', schema: ProductSchema }]),
     MongooseModule.forFeature([
+      { name: 'Product', schema: ProductSchema} ,
       { name: 'Categories', schema: CategoriesSchema },
-    ]),
-    MongooseModule.forFeature([
       { name: 'SubCategory', schema: SubCategorySchema },
     ]),
   ],

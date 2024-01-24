@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CartDTO } from 'src/dto/cart.dto';
+import { Cart } from 'src/interfaces/cart.interface';
 
 @Controller('cart')
 export class CartController {
@@ -22,6 +23,12 @@ export class CartController {
   @Get(':cartId')
   getCart(@Param('cartId') cartId: string): any {
     return this.cartService.getCart(cartId);
+  }
+
+  @Post('/get-by-ids')
+  async getCartsByIds(@Body() body: { cartIds: string[] }): Promise<Cart[]> {
+    const { cartIds } = body;
+    return this.cartService.getCartsByIds(cartIds);
   }
 
   // @Get('/:userId')

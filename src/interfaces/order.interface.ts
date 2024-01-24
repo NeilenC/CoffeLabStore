@@ -9,6 +9,7 @@ export interface Order extends Document {
   userId: string;
   items: [OrderItem];
   totalCart: number;
+  cartId: Object,
   status: string;
   paymentData: paymentData;
   shoppingData: shoppingData;

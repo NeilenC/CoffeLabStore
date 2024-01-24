@@ -3,7 +3,6 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Cart } from 'src/interfaces/cart.interface';
 import { Product } from 'src/interfaces/product.interface';
-// import { Product } from 'src/interfaces/product.interface';
 
 @Injectable()
 export class CartService {
@@ -13,6 +12,8 @@ export class CartService {
   ) {}
 
   async addToCart(userId: string, cartItems: any): Promise<Cart> {
+
+    console.log("CARTITEMAS", cartItems)
     try {
       if (!Array.isArray(cartItems.productDetails)) {
         throw new Error(
@@ -73,6 +74,10 @@ export class CartService {
       { cartId },
       { $set: { cart: [] } },
     );
+  }
+  
+  async getCartsByIds(cartIds: string[]): Promise<Cart[]> {
+    return this.cartModel.find({ _id: { $in: cartIds } }).exec();
   }
 
   // async getCart(userId: string): Promise<Cart> {

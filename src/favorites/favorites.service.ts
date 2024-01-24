@@ -12,7 +12,8 @@ export class FavoritesService {
       const existingFavorite = await this.favoritesModel.findOne({ userId: data.userId });
     
       if (existingFavorite) {
-        if (Array.isArray(existingFavorite.productId)) {
+        if (Array.isArray(existingFavorite.productId) && 
+        !existingFavorite.productId.includes(data.productId)) {
           existingFavorite.productId.push(data.productId);
         } 
         await existingFavorite.save();
@@ -26,7 +27,6 @@ export class FavoritesService {
     
         await createdFavorite.save();
         this.favoriteProducts.push(createdFavorite);
-        console.log("Created new favorite", createdFavorite);
     
         return createdFavorite;
       }
@@ -61,9 +61,5 @@ export class FavoritesService {
           throw error;
         }
       }
-      
-      
-      
-      
       
 }

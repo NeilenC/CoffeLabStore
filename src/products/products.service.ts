@@ -19,8 +19,9 @@ export class ProductsService {
     const products = await this.productModel.find();
     return products;
   }
-    async getProductsByIds(productIds: string[]): Promise<Product[]> {
-      const products = await this.productModel.find({ _id: { $in: productIds } });
+
+  async getProductsByIds(body: any): Promise<Product[]> {
+      const products = await this.productModel.find({ _id: { $in: body } });
       return products;
     }
 
