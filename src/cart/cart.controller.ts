@@ -15,10 +15,10 @@ import { Cart } from 'src/interfaces/cart.interface';
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
-  @Post(':userId')
-  addToCart(@Param('userId') userId: string, @Body() cartItems: any): void {
-    this.cartService.addToCart(userId, cartItems);
-  }
+  // @Post(':userId')
+  // addToCart(@Param('userId') userId: string, @Body() cartItems: any): void {
+  //   this.cartService.addToCart(userId, cartItems);
+  // }
 
   @Get(':cartId')
   getCart(@Param('cartId') cartId: string): any {
@@ -26,9 +26,9 @@ export class CartController {
   }
 
   @Post('/get-by-ids')
-  async getCartsByIds(@Body() body: { cartIds: string[] }): Promise<Cart[]> {
-    const { cartIds } = body;
-    return this.cartService.getCartsByIds(cartIds);
+  async getCartsByIds(@Body('cartIds') cartIds: string[] ): Promise<Cart[]> {
+    console.log("cartIdscartIds bac", cartIds)
+    return await this.cartService.getCartsByIds(cartIds);
   }
 
   // @Get('/:userId')

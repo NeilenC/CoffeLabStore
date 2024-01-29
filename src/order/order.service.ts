@@ -18,7 +18,6 @@ export class OrderService {
 
   async createOrder(userId: string, orderData: any): Promise<any> {
     const cart = await this.cartModel.find({ userId }).lean();
-    console.log('CART EN ORDER SERVICE', cart);
     const { userData, shoppingData, paymentData } = orderData;
 
     if (paymentData.deliveryCharge) {

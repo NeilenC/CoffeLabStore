@@ -5,6 +5,7 @@ import { Product } from 'src/interfaces/product.interface';
 import { CreateProductDTO, SubCategory } from 'src/dto/products.dto';
 import { Categories } from 'src/interfaces/categories.interfaces';
 import { ProductsModule } from './products.module';
+import mongoose from 'mongoose';
 // import { Cart } from 'src/interfaces/cart.interface';
 // import { CartDTO } from 'src/dto/cart.dto';
 
@@ -20,10 +21,13 @@ export class ProductsService {
     return products;
   }
 
-  async getProductsByIds(body: any): Promise<Product[]> {
-      const products = await this.productModel.find({ _id: { $in: body } });
-      return products;
-    }
+async getProductsByIds(productIds: string[]): Promise<Product[]> {
+  const objectIdArray = productIds.map((productId) => new mongoose.Types.ObjectId(productId));
+
+  const products = await this.productModel.find({ _id: { $in: objectIdArray } });
+  
+  return products;
+}
 
   async getProduct(id: string): Promise<Product> {
     const product = await this.productModel.findById(id);

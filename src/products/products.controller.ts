@@ -110,8 +110,8 @@ export class ProductsController {
   }
 
   @Post('byIds')
-  async getProductsByIds(@Body() body: any) {
-    const products = await this.productService.getProductsByIds(body.userFavorites);
+  async getProductsByIds(@Body('productIds') productIds: string[]) {
+    const products = await this.productService.getProductsByIds(productIds);
     return products;
   }
 

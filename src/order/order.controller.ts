@@ -11,7 +11,7 @@ export class OrderController {
   constructor(
     private readonly orderService: OrderService,
     private cartService: CartService,
-    private productsServive: ProductsService
+    private productsService: ProductsService
   ) {}
 
   @Post(':userId')
@@ -28,59 +28,68 @@ export class OrderController {
     return await this.orderService.getOrder(userId);
   }
 
+@Get('/get-orders/:userId')
+async getOrders(@Param('userId') userId: string) {
+  try {
+    // Obtener órdenes
+    const orders: any = await this.orderService.getOrders(userId);
 
-  @Get('/get-orders/:userId')
-  async getOrders(@Param('userId') userId: string) {
-    try {
-      const orders: any = await this.orderService.getOrders(userId);
+    // Obtener IDs de carritos de las órdenes
+    const cartsIdObj = orders.map((item: any) => item.cartId[0]._id.toString());
 
-      const cartsIdObj = orders.map((item: any) => item.cartId[0]._id);
+    // Obtener detalles de carritos (incluyendo productos)
+    const obtainCarts = await this.cartService.getCartsByIds(cartsIdObj);
 
-      const [carts, productsInCarts] = await Promise.all([
-        this.cartService.getCartsByIds(cartsIdObj),
-        this.getProductDetailsFromCarts(orders),
-      ]);
-      console.log("carts", carts);
 
-      console.log("productsInCarts", productsInCarts);
+    const productIds = obtainCarts.flatMap((cartItem: any) =>
+    cartItem.cart.map((item: any) => item.productId)
+  );
+  
+  // Obtener detalles completos de los productos
+  const obtainProducts = await this.productsService.getProductsByIds(productIds);
+  
+  const ordersWithDetails = orders.map((order: any) => {
+    // Obtine el ID del carrito desde cartId
+    const cartId = order.cartId[0]._id.toString();
+  
+    // Encuentra el carrito correspondiente en obtainCarts
+    const cartItem = obtainCarts.find((cart: any) => cart._id.toString() === cartId);
+  
+    // Mapea los detalles del carrito directamente
+    const cartDetails = cartItem.cart.map((cartProduct: any) => {
 
-    
-    } catch (error) {
-      console.error('Error al obtener las órdenes:', error);
-    }
-  }
-
-  private async getProductDetailsFromCarts(orders: any[]) {
-    const productPromises = orders.map(async (order) => {
-      const cartsIds = order.cartId[0]._id;
-      const cart:any = await this.cartService.getCartsByIds(cartsIds);
-      const products = cart.map((item: any) => item.cart)
-      const productsWidthQuantity =  products.map((item:any) => item[0].productId)
-
-      console.log("productsWidthQuantity", productsWidthQuantity)
-
-      return this.productsServive.getProductsByIds(productsWidthQuantity);
+    // Encuentra los detalles del producto correspondiente
+      const productDetails = obtainProducts.find(
+        (product: any) => product._id === cartProduct.productId
+      );
+  
+      return {
+        productId: cartProduct.productId,
+        quantity: cartProduct.quantity,
+        productDetails,
+      };
     });
-
-    return Promise.all(productPromises);
+  
+    return {
+      orderId: order._id.toString(),
+      createdAt: order.createdAt,
+      cartTotal: order.cartTotal,
+      cartDetails,
+      userData: order.userData,
+      shoppingData: order.shoppingData,
+      status: order.status,
+      trackingNumber: order.trackingNumber,
+    };
+  });
+  
+  
+  return ordersWithDetails;
+  
+  } catch (error) {
+    console.error('Error al obtener las órdenes:', error);
+    throw new Error('Error al obtener las órdenes');
   }
-
-
-  // carts [
-  //   {
-  //     _id: new ObjectId("6580490edccd98fcbb742ab9"),
-  //     userId: '658046e0dccd98fcbb742aab',
-  //     cart: [
-  //       [Object], [Object],
-  //       [Object], [Object],
-  //       [Object], [Object],
-  //       [Object], [Object]
-  //     ],
-  //     createdAt: 2023-12-18T13:28:46.281Z,
-  //     __v: 4,
-  //     cartTotal: 5600
-  //   }
-  // ]
+}
   
 
   // @Get('/get-orders/:userId')
