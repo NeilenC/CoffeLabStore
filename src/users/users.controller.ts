@@ -29,9 +29,10 @@ export class UsersController {
   }
 
   @Get('/:id')
-  async findOne(@Param('id') id: string, @Res() res: any) {
+  async findOne(@Param('id') id: string) {
     const user = await this.userService.findOneById(id);
-    return res.send(user);
+
+    return user;
   }
 
   @Put('/:id')

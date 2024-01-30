@@ -11,59 +11,58 @@ export class CartService {
     @InjectModel('Product') readonly productModel: Model<Product>,
   ) {}
 
-  // async addToCart(userId: string, cartItems: any): Promise<Cart> {
+  async createCartInBackend(userId: string, cartItems: any): Promise<Cart> {
 
-  //   console.log("CARTITEMAS", cartItems)
-  //   try {
-  //     if (!Array.isArray(cartItems.productDetails)) {
-  //       throw new Error(
-  //         'Error al procesar la solicitud: cartItems no es un arreglo',
-  //       );
-  //     }
+    try {
+      if (!Array.isArray(cartItems.productDetails)) {
+        throw new Error(
+          'Error al procesar la solicitud: cartItems no es un arreglo',
+        );
+      }
 
-  //     let cart = (await this.cartModel.findOne({ userId })) || null;
-  //     const cartItemsArr = cartItems.productDetails;
+      let cart = (await this.cartModel.findOne({ userId })) || null;
+      const cartItemsArr = cartItems.productDetails;
 
-  //     if (!cart) {
-  //       cart = await this.cartModel.create({ userId, cart: cartItemsArr });
-  //     } else {
-  //       const prices = await Promise.all(
-  //         cartItemsArr.map(async (item: any) => {
-  //           const product = await this.productModel
-  //             .findById(item.productId)
-  //             .exec();
-  //           if (!product) {
-  //             throw new Error(
-  //               `No se encontró el producto con ID: ${item.productId}`,
-  //             );
-  //           }
-  //           return product.price * item.quantity;
-  //         }),
-  //       );
+      if (!cart) {
+        cart = await this.cartModel.create({ userId, cart: cartItemsArr });
+      } else {
+        const prices = await Promise.all(
+          cartItemsArr.map(async (item: any) => {
+            const product = await this.productModel
+              .findById(item.productId)
+              .exec();
+            if (!product) {
+              throw new Error(
+                `No se encontró el producto con ID: ${item.productId}`,
+              );
+            }
+            return product.price * item.quantity;
+          }),
+        );
 
-  //       const newCartTotal = prices.reduce((total, price) => total + price, 0);
+        const newCartTotal = prices.reduce((total, price) => total + price, 0);
 
-  //       cart.cartTotal = newCartTotal;
+        cart.cartTotal = newCartTotal;
 
-  //       for (const cartItem of cartItemsArr) {
-  //         const existingCartItem = cart.cart.find(
-  //           (item) => item.productId === cartItem.productId,
-  //         );
+        for (const cartItem of cartItemsArr) {
+          const existingCartItem = cart.cart.find(
+            (item) => item.productId === cartItem.productId,
+          );
 
-  //         if (existingCartItem) {
-  //           existingCartItem.quantity += cartItem.quantity;
-  //         } else {
-  //           cart.cart.push(cartItem);
-  //         }
-  //       }
-  //     }
+          if (existingCartItem) {
+            existingCartItem.quantity += cartItem.quantity;
+          } else {
+            cart.cart.push(cartItem);
+          }
+        }
+      }
 
-  //     return await cart.save();
-  //   } catch (error) {
-  //     console.error('Error en addToCart:', error);
-  //     throw new Error('Error al procesar la solicitud');
-  //   }
-  // }
+      return await cart.save();
+    } catch (error) {
+      console.error('Error en addToCart:', error);
+      throw new Error('Error al procesar la solicitud');
+    }
+  }
 
   async getCart(cartId: string): Promise<Cart> {
     return this.cartModel.findOne({ cartId }).exec();

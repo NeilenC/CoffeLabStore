@@ -15,10 +15,10 @@ import { Cart } from 'src/interfaces/cart.interface';
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
-  // @Post(':userId')
-  // addToCart(@Param('userId') userId: string, @Body() cartItems: any): void {
-  //   this.cartService.addToCart(userId, cartItems);
-  // }
+  @Post(':userId')
+  createCartInBackend(@Param('userId') userId: string, @Body() cartItems: any): void {
+    this.cartService.createCartInBackend(userId, cartItems);
+  }
 
   @Get(':cartId')
   getCart(@Param('cartId') cartId: string): any {

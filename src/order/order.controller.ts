@@ -69,11 +69,11 @@ async getOrders(@Param('userId') userId: string) {
         productDetails,
       };
     });
-  
-    return {
+
+      return {
       orderId: order._id.toString(),
       createdAt: order.createdAt,
-      cartTotal: order.cartTotal,
+      cartTotal: order.totalCart,
       cartDetails,
       userData: order.userData,
       shoppingData: order.shoppingData,
