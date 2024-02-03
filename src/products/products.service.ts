@@ -20,12 +20,10 @@ export class ProductsService {
     const products = await this.productModel.find();
     return products;
   }
-
-async getProductsByIds(productIds: string[]): Promise<Product[]> {
-  const objectIdArray = productIds.map((productId) => new mongoose.Types.ObjectId(productId));
-
-  const products = await this.productModel.find({ _id: { $in: objectIdArray } });
   
+  async getProductsByIds(productIds: string[]): Promise<Product[]> {
+  const objectIdArray = productIds.map((productId) => new mongoose.Types.ObjectId(productId));
+  const products = await this.productModel.find({ _id: { $in: objectIdArray } })
   return products;
 }
 

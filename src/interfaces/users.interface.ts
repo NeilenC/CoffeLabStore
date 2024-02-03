@@ -2,8 +2,8 @@ import { Document } from 'mongoose';
 import { Role } from 'src/commons/enums/rol.enums';
 
 export interface Users extends Document {
-  readonly name: string;
-  readonly lastName: string;
+  name: string;
+  lastName: string;
   email: string;
   password: string;
   phoneNumber: number;

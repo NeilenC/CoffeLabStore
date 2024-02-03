@@ -27,13 +27,13 @@ export class AuthService {
     if (user) {
       throw new BadRequestException('Usuario ya existe');
     }
-    const saltOrRounds = await bcrypt.genSalt();
+    // const saltOrRounds = await bcrypt.genSalt();
     const newUser = await this.usersService.register({
       name,
       lastName,
       email,
       phoneNumber,
-      password: await bcrypt.hash(password, saltOrRounds),
+      password: await bcrypt.hash(password, 10),
     });
     return newUser.save();
   }

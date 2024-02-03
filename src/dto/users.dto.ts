@@ -16,13 +16,15 @@ export class CreateUserDTO {
 
 export class UpdateUserDTO {
   @IsOptional()
+  name?: string;
+  @IsOptional()
+  lastName? : string;
+  @IsOptional()
   @IsEmail()
   email?: string;
-
   @IsOptional()
   @IsNumber()
   phoneNumber?: number;
-
   @IsOptional()
   password: string;
 }

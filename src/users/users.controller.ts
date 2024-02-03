@@ -38,11 +38,19 @@ export class UsersController {
   @Put('/:id')
   async updateUser(
     @Param('id') id: string,
-    @Res() res: any,
-    @Body() updateUserDTO: UpdateUserDTO,
+    @Body() updateUserDTO :  UpdateUserDTO 
   ) {
-    console.log('id', id);
     const updatedUser = await this.userService.updateUser(id, updateUserDTO);
-    return res.status(HttpStatus.OK).send(updatedUser);
+    return updatedUser;
   }
+
+  @Put('/modifyPassword/:id')
+  async modifyPassword(
+    @Param('id') id: string,
+    @Body() {updateUserDTO, currentPassword}: { updateUserDTO: UpdateUserDTO, currentPassword: string}) {
+    const updatedUser = await this.userService.modifyPassword(id, updateUserDTO, currentPassword);
+    return updatedUser;
+  }
+  
+  
 }
