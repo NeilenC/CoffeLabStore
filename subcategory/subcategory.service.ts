@@ -14,7 +14,6 @@ export class SubCategoryService {
   async createSubCategory(createSubCategoryDTO: SubCategory) {
     try {
       const categoryId = createSubCategoryDTO.category;
-      console.log("categoyrid", categoryId)
       const category = await this.categoryModel.findById(categoryId);
 
       if (!category) {
@@ -49,7 +48,6 @@ export class SubCategoryService {
       }
       return getSubCategory;
     } catch (e) {
-      console.log('ERROR SERVICE', e);
       throw new Error(e.message);
     }
   }

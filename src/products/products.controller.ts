@@ -56,7 +56,6 @@ export class ProductsController {
 
     const newProduct =
       await this.productService.createProduct(createProductDTO);
-    console.log('NEW', newProduct);
 
     return res.status(HttpStatus.OK).send(newProduct);
   }
@@ -116,8 +115,8 @@ export class ProductsController {
     return products;
   }
 
-  @Delete('/delete')
-  async deleteProduct(@Res() res: any, @Query('productID') productID: string) {
+  @Delete('/delete/:productID')
+  async deleteProduct(@Res() res: any, @Param('productID') productID: string) {
     const deletedProduct = await this.productService.deleteProduct(productID);
     if (!deletedProduct) {
       return NotFoundException;

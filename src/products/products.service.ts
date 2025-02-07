@@ -89,7 +89,6 @@ export class ProductsService {
 
       return products;
     } catch (error) {
-      console.log("error", error)
       throw error;
     }
   }

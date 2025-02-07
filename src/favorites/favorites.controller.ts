@@ -25,7 +25,6 @@ async removeFromFavorites(
   @Param('userId') userId: string,
   @Body('productId') productId: string,
 ): Promise<FavoritesDocument | null> {
-  console.log("remove", productId);
 
   return this.favoritesService.removeFromFavorites(userId, productId);
 }

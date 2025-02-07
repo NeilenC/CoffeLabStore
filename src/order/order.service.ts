@@ -20,9 +20,6 @@ export class OrderService {
     const cart = await this.cartModel.find({ userId }).lean();
     const { userData, shoppingData, paymentData } = orderData;
 
-    if (paymentData.deliveryCharge) {
-      cart[0].cartTotal += paymentData.deliveryCharge;
-    }
     //NUMERO DE SEGUIMIENTO UNICO MEDIANTE UUID
     const trackingNumber = uuidv4();
 
@@ -42,7 +39,6 @@ export class OrderService {
     for (const item of cart[0].cart) {
       const product = await this.productModel.findById(item.productId);
 
-      console.log('PRDUCTO', product);
       if (product) {
         product.stock -= item.quantity;
         await product.save();
@@ -65,7 +61,6 @@ export class OrderService {
       const orders = await this.orderModel.find({ userId }).exec();
       return orders;
     } catch (error) {
-      console.error('Error:', error);
       throw new Error('Error al obtener las órdenes');
     }
   }

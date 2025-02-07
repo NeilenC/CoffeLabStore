@@ -25,7 +25,7 @@ export class AuthService {
   }: RegisterDTO) {
     const user = await this.usersService.findOneByEmail(email);
     if (user) {
-      throw new BadRequestException('Usuario ya existe');
+      throw new BadRequestException(`El email ${email} ya se encuentra registrado`);
     }
     // const saltOrRounds = await bcrypt.genSalt();
     const newUser = await this.usersService.register({

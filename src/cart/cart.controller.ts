@@ -27,7 +27,6 @@ export class CartController {
 
   @Post('/get-by-ids')
   async getCartsByIds(@Body('cartIds') cartIds: string[] ): Promise<Cart[]> {
-    console.log("cartIdscartIds bac", cartIds)
     return await this.cartService.getCartsByIds(cartIds);
   }
 

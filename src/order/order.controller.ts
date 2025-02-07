@@ -15,13 +15,12 @@ export class OrderController {
   ) {}
 
   @Post(':userId')
-  async createOrder(
-    @Param('userId') userId: string,
-    @Body() orderData: any,
-  ): Promise<any> {
+  async createOrder(@Param('userId') userId: string, @Body() orderData: any): Promise<any> {
+    console.log('Datos de la orden:', orderData);  
     const order = await this.orderService.createOrder(userId, orderData);
+    console.log('Orden creada:', order);
     return { message: 'Order created successfully', order };
-  }
+  } 
 
   @Get(':userId')
   async getOrder(@Param('userId') userId: string) {
